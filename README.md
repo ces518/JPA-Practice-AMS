@@ -142,7 +142,6 @@
     - CREATED_BY
     - UPDATED_BY
  
- 
 `시험_타입`
 - TEST_TYPE
     - TEST_TYPE_ID (PK)
