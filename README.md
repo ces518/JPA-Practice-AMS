@@ -136,3 +136,65 @@
     - SCORE
     - CREATED_AT
     - CREATED_BY
+
+#### 엔티티 설계와 매핑
+- BaseEntity
+    - createdBy: Member
+    - updatedBy: Member
+    
+- BaseTimeEntity
+    - createdAt: LocalDateTime
+    - updatedAt: LocalDateTime
+    
+- Address
+    - city: String
+    - street: String
+    - zipcode: String
+        
+- Member
+    - id: Long
+    - name: String
+    - address: Address
+    - phone: String
+    - status: Status
+    
+- Teacher
+    - id: Long
+    - name: String
+    - phone: String
+    - status: Status
+
+- Groups
+    - id: Long
+    - name: String
+    - status: Status
+
+- GroupTeacher
+    - id: Long
+    - group: Groups
+    - teacher: Teacher
+
+- GroupMember
+    - id: Long
+    - group: Groups
+    - member: Member
+    
+- Grade
+    - id: Long
+    - name: String
+    - status: Status
+    
+- Subject
+    - id: Long
+    - name: String
+    - status: Status
+
+- Results
+    - id: Long
+    - member: Member
+    - subject: Subject
+    - score: int
+    
+    
+
+    
