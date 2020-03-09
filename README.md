@@ -46,6 +46,13 @@
     - 수정
     - 삭제
 
+- 시험타입 관리
+    - 목록 조회
+    - 상세 조회
+    - 등록
+    - 수정
+    - 삭제
+    
 - 성적관리
     - 목록 조회
     - 상세 조회
@@ -134,11 +141,23 @@
     - UPDATED_AT
     - CREATED_BY
     - UPDATED_BY
-   
+ 
+ 
+`시험_타입`
+- TEST_TYPE
+    - TEST_TYPE_ID (PK)
+    - NAME
+    - STATUS
+    - CREATED_AT
+    - UPDATED_AT
+    - CREATED_BY
+    - UPDATED_BY
+    
 `성적`
 - RESULTS
     - RESULT_ID (PK)
     - MEMBER_ID (FK)
+    - TEST_TYPE_ID (FK)
     - SUBJECT_ID (FK)
     - SCORE
     - CREATED_AT
@@ -196,10 +215,16 @@
     - name: String
     - status: Status
 
+- TestType
+    - id: Long
+    - name: String
+    - status: Status
+
 - Results
     - id: Long
     - member: Member
     - subject: Subject
+    - testType: TestType
     - score: int
     
     
