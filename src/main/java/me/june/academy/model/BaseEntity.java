@@ -1,6 +1,7 @@
 package me.june.academy.model;
 
 import lombok.Getter;
+import me.june.academy.domain.member.Member;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -9,7 +10,6 @@ import javax.persistence.EntityListeners;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
-import java.lang.reflect.Member;
 
 /**
  * Created by IntelliJ IDEA.
