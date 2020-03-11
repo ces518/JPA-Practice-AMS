@@ -1,6 +1,7 @@
 package me.june.academy.domain.member;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import me.june.academy.model.Address;
@@ -33,4 +34,23 @@ public class Member extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private Status status;
+
+    @Builder
+    public Member(String name, Address address, String phone, Status status) {
+        this.name = name;
+        this.address = address;
+        this.phone = phone;
+        this.status = status;
+    }
+
+    public void disable() {
+        this.status = Status.DISABLED;
+    }
+
+    public void update(Member member) {
+        this.name = member.getName();
+        this.address = member.getAddress();
+        this.phone = member.getPhone();
+        this.status = member.getStatus();
+    }
 }

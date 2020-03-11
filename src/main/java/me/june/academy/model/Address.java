@@ -1,6 +1,9 @@
 package me.june.academy.model;
 
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Embeddable;
 
@@ -12,6 +15,8 @@ import javax.persistence.Embeddable;
  **/
 @Embeddable
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EqualsAndHashCode
 public class Address {
     private String city;
     private String street;
