@@ -3,7 +3,11 @@ package me.june.academy.domain.member.service;
 import lombok.RequiredArgsConstructor;
 import me.june.academy.domain.member.Member;
 import me.june.academy.domain.member.repository.MemberRepository;
+import me.june.academy.domain.member.repository.MemberSearch;
 import me.june.academy.domain.member.web.MemberForm;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -23,8 +27,8 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     // 목록 조회
-    public List<Member> findAll() {
-        return memberRepository.findAll();
+    public Page<Member> findAll(MemberSearch memberSearch, Pageable pageable) {
+        return memberRepository.findAll(memberSearch, pageable);
     }
 
     // 상세 조회

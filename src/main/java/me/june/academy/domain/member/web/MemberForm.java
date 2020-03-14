@@ -51,7 +51,6 @@ public class MemberForm {
                 .name(this.name)
                 .phone(this.phone)
                 .address(new Address(this.city, this.street, this.zipcode))
-                .status(Status.AVAILABLE)
                 .build();
     }
 }

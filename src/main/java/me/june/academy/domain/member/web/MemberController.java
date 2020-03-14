@@ -3,7 +3,10 @@ package me.june.academy.domain.member.web;
 import lombok.RequiredArgsConstructor;
 import me.june.academy.common.Message;
 import me.june.academy.domain.member.Member;
+import me.june.academy.domain.member.repository.MemberSearch;
 import me.june.academy.domain.member.service.MemberService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -26,7 +29,9 @@ public class MemberController {
 
     @GetMapping("/members")
     public String list(Model model) {
-        List<Member> members = memberService.findAll();
+        Page<Member> page = memberService.findAll(new MemberSearch(), PageRequest.of(0 ,10));
+        List<Member> members = page.getContent();
+
         model.addAttribute("members", members);
         return "members/list";
     }

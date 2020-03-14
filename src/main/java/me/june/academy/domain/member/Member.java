@@ -36,6 +36,10 @@ public class Member extends BaseEntity {
     private Status status;
 
     @Builder
+    public Member(String name, Address address, String phone) {
+        this(name, address, phone, Status.AVAILABLE);
+    }
+
     public Member(String name, Address address, String phone, Status status) {
         this.name = name;
         this.address = address;
