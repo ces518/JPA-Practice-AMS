@@ -1,0 +1,19 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header">
+    <title>Academy</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<div class="container">
+    <div th:replace="fragments/bodyHeader :: bodyHeader" />
+    <div class="jumbotron"> <h1>Academy</h1>
+        <p class="lead">회원 기능</p> <p>
+            <a class="btn btn-lg btn-secondary" th:href="@{/members/new}">회원 가입</a>
+            <a class="btn btn-lg btn-secondary" th:href="@{/members}">회원 목록</a> </p>
+        <!--<a class="btn btn-lg btn-dark" href="#">검정버튼</a>-->
+        <!--<a class="btn btn-lg btn-info" href="#">청록버튼</a>-->
+    </div>
+    <div th:replace="fragments/footer :: footer" />
+</div> <!-- /container -->
+ 
