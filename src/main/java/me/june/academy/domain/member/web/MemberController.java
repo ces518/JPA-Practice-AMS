@@ -5,15 +5,18 @@ import me.june.academy.common.Message;
 import me.june.academy.domain.member.Member;
 import me.june.academy.domain.member.repository.MemberSearch;
 import me.june.academy.domain.member.service.MemberService;
+import me.june.academy.domain.member.validator.MemberValidator;
+import me.june.academy.utils.PageWrapper;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.List;
+import javax.validation.Valid;
 
 /**
  * Created by IntelliJ IDEA.
@@ -22,42 +25,53 @@ import java.util.List;
  * Time: 18:02
  **/
 @Controller
+@RequestMapping("/members")
 @RequiredArgsConstructor
 public class MemberController {
-    private final String MEMBER_FORM = "members/form";
+    private final String MEMBER_FORM = "members/regist";
     private final MemberService memberService;
 
-    @GetMapping("/members")
-    public String list(Model model) {
-        Page<Member> page = memberService.findAll(new MemberSearch(), PageRequest.of(0 ,10));
-        List<Member> members = page.getContent();
+    @InitBinder("memberForm")
+    public void memberFormValidator(WebDataBinder webDataBinder) {
+        webDataBinder.addValidators(new MemberValidator());
+    }
 
-        model.addAttribute("members", members);
+    @GetMapping
+    public String list(Pageable pageable,
+                       MemberSearch memberSearch,
+                       Model model) {
+        Page<Member> page = memberService.findAll(memberSearch, pageable);
+        PageWrapper<Member> pageWrapper = new PageWrapper<>(page, "/members");
+
+        model.addAttribute("members", page.getContent());
+        model.addAttribute("page", pageWrapper);
         return "members/list";
     }
 
-    @GetMapping("/members/form")
+    @GetMapping("new")
     public String form(Model model) {
         model.addAttribute("memberForm", new MemberForm());
         return MEMBER_FORM;
     }
 
-    @GetMapping("/members/{id}")
-    public String view(@PathVariable Long id, Model model) {
+    @GetMapping("{id}")
+    public String view(@PathVariable Long id,
+                       Pageable pageable,
+                       Model model) {
         Member findMember = memberService.findMember(id);
         model.addAttribute("member", findMember);
         return "members/view";
     }
 
-    @GetMapping("/members/{id}/edit")
+    @GetMapping("{id}/edit")
     public String editForm(@PathVariable Long id, Model model) {
         Member findMember = memberService.findMember(id);
         model.addAttribute("memberForm", new MemberForm(findMember));
         return MEMBER_FORM;
     }
 
-    @PostMapping
-    public String createMember(@ModelAttribute MemberForm memberForm,
+    @PostMapping("new")
+    public String createMember(@Valid @ModelAttribute MemberForm memberForm,
                                BindingResult result,
                                RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
@@ -69,7 +83,7 @@ public class MemberController {
     }
 
     @PostMapping("{id}/edit")
-    public String updateMember(@ModelAttribute MemberForm memberForm,
+    public String updateMember(@Valid @ModelAttribute MemberForm memberForm,
                                BindingResult result,
                                RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
