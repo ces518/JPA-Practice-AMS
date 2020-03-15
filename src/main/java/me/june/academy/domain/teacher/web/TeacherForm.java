@@ -19,7 +19,16 @@ public class TeacherForm {
     private String name;
     private String phone;
 
+    public TeacherForm(Teacher teacher) {
+        this(teacher.getId(), teacher.getName(), teacher.getPhone());
+    }
+
     public TeacherForm(String name, String phone) {
+        this(null, name, phone);
+    }
+
+    public TeacherForm(Long id, String name, String phone) {
+        this.id = id;
         this.name = name;
         this.phone = phone;
     }
