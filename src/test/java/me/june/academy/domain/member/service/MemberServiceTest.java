@@ -230,7 +230,8 @@ class MemberServiceTest {
 
         // when
         memberService.deleteMember(savedMemberId);
-        Member findMember = memberService.findMember(savedMemberId);
+        Optional<Member> optionalMember = memberRepository.findById(savedMemberId);
+        Member findMember = optionalMember.get();
 
         // then
         assertThat(findMember.getStatus()).isEqualTo(Status.DISABLED);
