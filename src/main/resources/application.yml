@@ -16,7 +16,10 @@ spring:
     web:
       pageable:
         default-page-size: 10
-
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
 logging.level:
   org.hibernate.SQL: debug
 # org.hibernate.type: trace
