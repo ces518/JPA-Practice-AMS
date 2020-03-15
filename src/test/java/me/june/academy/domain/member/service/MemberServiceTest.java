@@ -150,7 +150,8 @@ class MemberServiceTest {
 
         // when
         memberService.updateMember(memberForm);
-        Member findMember = memberService.findMember(memberForm.getId());
+        Optional<Member> optionalMember = memberRepository.findById(savedMemberId);
+        Member findMember = optionalMember.get();
 
         // then
         assertThat(findMember.getName()).isEqualTo(memberForm.getName());
