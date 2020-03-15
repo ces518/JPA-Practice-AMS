@@ -36,8 +36,8 @@ public class MemberRepositoryImpl extends QuerydslRepositorySupport implements M
         JPAQuery<Member> query = queryFactory
                 .select(member)
                 .from(member)
-                .orderBy(member.id.desc())
-                .where(likeName(memberSearch.getName()));
+                .where(likeName(memberSearch.getName()))
+                .orderBy(member.id.desc());
         List<Member> members = getQuerydsl().applyPagination(pageable, query).fetch();
         return new PageImpl<>(members, pageable, query.fetchCount());
     }
