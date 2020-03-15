@@ -1,5 +1,6 @@
 package me.june.academy.domain.member.service;
 
+import me.june.academy.common.BadRequestException;
 import me.june.academy.domain.member.Member;
 import me.june.academy.domain.member.repository.MemberRepository;
 import me.june.academy.domain.member.repository.MemberSearch;
@@ -28,7 +29,7 @@ class MemberServiceTest {
     @Autowired MemberRepository memberRepository;
 
     @Test
-    public void 학원생_조회() throws Exception {
+    public void 학원생_목록_조회() throws Exception {
         // given
         memberRepository.save(createMember("memberA", "경기도 수원", "구운동", "010-1234-1234"));
         memberRepository.save(createMember("memberB", "강원도", "몰라몰라", "010-1234-1234"));
@@ -48,7 +49,7 @@ class MemberServiceTest {
     }
 
     @Test
-    public void 학원생_조회_memberB검색() throws Exception {
+    public void 학원생_목록_조회_memberB검색() throws Exception {
         // given
         memberRepository.save(createMember("memberA", "경기도 수원", "구운동", "010-1234-1234"));
         memberRepository.save(createMember("memberB", "강원도", "몰라몰라", "010-1234-1234"));
@@ -90,27 +91,28 @@ class MemberServiceTest {
     @Test
     public void 학원생_상세조회_성공() throws Exception {
         // given
-        MemberForm memberForm = createMemberForm("memberA", "경기도 수원시", "구운동");
-        Long savedMemberId = memberService.saveMember(memberForm);
+        Member member = createMember("memberA", "경기도 수원", "구운동", "010-1234-1234");
+        Member savedMember = memberRepository.save(member);
+        Long savedMemberId = savedMember.getId();
 
         // when
         Member findMember = memberService.findMember(savedMemberId);
 
         // then
-        assertThat(findMember.getName()).isEqualTo(memberForm.getName());
-        assertThat(findMember.getPhone()).isEqualTo(memberForm.getPhone());
-        assertThat(findMember.getAddress().getCity()).isEqualTo(memberForm.getCity());
-        assertThat(findMember.getAddress().getStreet()).isEqualTo(memberForm.getStreet());
-        assertThat(findMember.getAddress().getZipcode()).isEqualTo(memberForm.getZipcode());
+        assertThat(findMember.getName()).isEqualTo(member.getName());
+        assertThat(findMember.getPhone()).isEqualTo(member.getPhone());
+        assertThat(findMember.getAddress().getCity()).isEqualTo(member.getAddress().getCity());
+        assertThat(findMember.getAddress().getStreet()).isEqualTo(member.getAddress().getStreet());
+        assertThat(findMember.getAddress().getZipcode()).isEqualTo(member.getAddress().getZipcode());
         assertThat(findMember.getStatus()).isEqualTo(Status.AVAILABLE);
     }
 
     @Test
-    public void 학원생_상세조회_존재하지_않는_회원() throws Exception {
+    public void 학원생_상세조회_실패_존재하지_않는_회원() throws Exception {
         // given
-        MemberForm memberForm = createMemberForm("memberA", "경기도 수원시", "구운동");
-        Long savedMemberId = memberService.saveMember(memberForm);
-
+        Member member = createMember("memberA", "경기도 수원", "구운동", "010-1234-1234");
+        Member savedMember = memberRepository.save(member);
+        Long savedMemberId = savedMember.getId();
         // when
         NotFoundMemberException exception = Assertions.assertThrows(NotFoundMemberException.class, () -> {
             Member findMember = memberService.findMember(savedMemberId + 1);
@@ -121,10 +123,11 @@ class MemberServiceTest {
     }
 
     @Test
-    public void 학원생_상세조회_id값_null() throws Exception {
+    public void 학원생_상세조회_실패_id값_null() throws Exception {
         // given
-        MemberForm memberForm = createMemberForm("memberA", "경기도 수원시", "구운동");
-        Long savedMemberId = memberService.saveMember(memberForm);
+        Member member = createMember("memberA", "경기도 수원", "구운동", "010-1234-1234");
+        Member savedMember = memberRepository.save(member);
+        Long savedMemberId = savedMember.getId();
 
         // when
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
@@ -138,7 +141,10 @@ class MemberServiceTest {
     @Test
     public void 학원생_수정_성공() throws Exception {
         // given
-        Long savedMemberId = memberService.saveMember(createMemberForm("memberA", "경기도 수원시", "구운동"));
+        Member member = createMember("memberA", "경기도 수원", "구운동", "010-1234-1234");
+        Member savedMember = memberRepository.save(member);
+        Long savedMemberId = savedMember.getId();
+
         MemberForm memberForm = createMemberForm("memberA수정", "강원도", " 몰라몰라");
         memberForm.setId(savedMemberId);
 
@@ -156,9 +162,12 @@ class MemberServiceTest {
     }
 
     @Test
-    public void 학원생_수정_존재하지_않는_학원생() throws Exception {
+    public void 학원생_수정_실패_존재하지_않는_학원생() throws Exception {
         // given
-        Long savedMemberId = memberService.saveMember(createMemberForm("memberA", "경기도 수원시", "구운동"));
+        Member member = createMember("memberA", "경기도 수원", "구운동", "010-1234-1234");
+        Member savedMember = memberRepository.save(member);
+        Long savedMemberId = savedMember.getId();
+
         MemberForm memberForm = createMemberForm("memberA수정", "강원도", " 몰라몰라");
         memberForm.setId(savedMemberId + 1);
 
@@ -172,9 +181,12 @@ class MemberServiceTest {
     }
 
     @Test
-    public void 학원생_수정_id값_null() throws Exception {
+    public void 학원생_수정_실패_id값_null() throws Exception {
         // given
-        Long savedMemberId = memberService.saveMember(createMemberForm("memberA", "경기도 수원시", "구운동"));
+        Member member = createMember("memberA", "경기도 수원", "구운동", "010-1234-1234");
+        Member savedMember = memberRepository.save(member);
+        Long savedMemberId = savedMember.getId();
+
         MemberForm memberForm = createMemberForm("memberA수정", "강원도", " 몰라몰라");
         memberForm.setId(null);
 
@@ -188,10 +200,32 @@ class MemberServiceTest {
     }
 
     @Test
-    public void 학원생_삭제() throws Exception {
+    public void 학원생_수정_실패_status_disabled() throws Exception {
         // given
-        MemberForm memberForm = createMemberForm("memberA", "경기도 수원시", "구운동");
-        Long savedMemberId = memberService.saveMember(memberForm);
+        Member member = createMember("memberA", "경기도 수원", "구운동", "010-1234-1234");
+        member.disable();
+
+        Member savedMember = memberRepository.save(member);
+        Long savedMemberId = savedMember.getId();
+
+        MemberForm memberForm = createMemberForm("memberA수정", "강원도", " 몰라몰라");
+        memberForm.setId(savedMemberId);
+
+        // when
+        BadRequestException exception = Assertions.assertThrows(BadRequestException.class, () -> {
+            memberService.updateMember(memberForm);
+        });
+
+        // then
+        assertThat(exception.getMessage()).isEqualTo("비활성화 처리된 학원생은 수정할 수 없습니다.");
+    }
+
+    @Test
+    public void 학원생_삭제_성공() throws Exception {
+        // given
+        Member member = createMember("memberA", "경기도 수원", "구운동", "010-1234-1234");
+        Member savedMember = memberRepository.save(member);
+        Long savedMemberId = savedMember.getId();
 
         // when
         memberService.deleteMember(savedMemberId);
@@ -202,10 +236,11 @@ class MemberServiceTest {
     }
 
     @Test
-    public void 학원생_삭제_존재하지_않는_학원생() throws Exception {
+    public void 학원생_삭제_실패_존재하지_않는_학원생() throws Exception {
         // given
-        MemberForm memberForm = createMemberForm("memberA", "경기도 수원시", "구운동");
-        Long savedMemberId = memberService.saveMember(memberForm);
+        Member member = createMember("memberA", "경기도 수원", "구운동", "010-1234-1234");
+        Member savedMember = memberRepository.save(member);
+        Long savedMemberId = savedMember.getId();
 
         // when
         NotFoundMemberException exception = Assertions.assertThrows(NotFoundMemberException.class, () -> {
@@ -217,10 +252,11 @@ class MemberServiceTest {
     }
 
     @Test
-    public void 학원생_삭제_id값_null() throws Exception {
+    public void 학원생_삭제_실패_id값_null() throws Exception {
         // given
-        MemberForm memberForm = createMemberForm("memberA", "경기도 수원시", "구운동");
-        Long savedMemberId = memberService.saveMember(memberForm);
+        Member member = createMember("memberA", "경기도 수원", "구운동", "010-1234-1234");
+        Member savedMember = memberRepository.save(member);
+        Long savedMemberId = savedMember.getId();
 
         // when
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
@@ -229,6 +265,24 @@ class MemberServiceTest {
 
         // then
         assertThat(exception.getMessage()).isEqualTo("Member id should be not null");
+    }
+
+    @Test
+    public void 학원생_삭제_실패_status_disabled() throws Exception {
+        // given
+        Member member = createMember("memberA", "경기도 수원", "구운동", "010-1234-1234");
+        member.disable();
+
+        Member savedMember = memberRepository.save(member);
+        Long savedMemberId = savedMember.getId();
+
+        // when
+        BadRequestException exception = Assertions.assertThrows(BadRequestException.class, () -> {
+            memberService.deleteMember(savedMemberId);
+        });
+
+        // then
+        assertThat(exception.getMessage()).isEqualTo("이미 비활성화 처리된 학원생 입니다.");
     }
 
     private Member createMember(String name, String city, String street, String phone) {

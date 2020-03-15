@@ -59,6 +59,7 @@ class MemberRepositoryTest {
         assertThat(members.size()).isEqualTo(1);
         assertThat(members.get(0).getName()).isEqualTo("memberB");
     }
+
     private Member createMember(String name, String city, String street, String phone) {
         return Member.builder()
                 .name(name)
