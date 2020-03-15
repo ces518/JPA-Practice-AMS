@@ -30,14 +30,34 @@
             <th>연락처</th>
             <td th:text="${member.phone}"></td>
         </tr>
+        <tr>
+            <th>상태</th>
+            <td th:text="${member.status}"></td>
+        </tr>
     </table>
     <div style="text-align: right;">
         <a class="btn btn-sm btn-dark" href="#edit" th:href="@{/members/{id}/edit (id=${member.id})}">수정</a>
+        <a class="btn btn-sm btn-warning" href="#edit" th:attr="onclick=|deleteMember(${member.id})|">삭제</a>
         <a class="btn btn-sm btn-info" th:href="@{/members}">목록</a>
     </div>
     <br/>
     <div th:replace="fragments/footer :: footer" />
 </div> <!-- /container -->
-<script th:src="@{/js/domain/Member.js}"></script>
+<script>
+    function deleteMember(id) {
+        const form = document.createElement('form');
+        const method = document.createElement('input');
+
+        method.type = 'hidden';
+        method.name = '_method';
+        method.value = 'DELETE';
+        form.action = `/members/${id}`;
+        form.method = 'post';
+
+        form.appendChild(method);
+        document.body.appendChild(form);
+        form.submit();
+    }
+</script>
 </body>
 </html>

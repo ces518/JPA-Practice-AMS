@@ -5,6 +5,15 @@
 <div class="container">
     <div th:replace="fragments/bodyHeader :: bodyHeader" />
     <div>
+        <form th:object="${memberSearch}" class="form-inline">
+            <div class="form-group mb-2">
+                <input type="text" th:field="*{name}" class="formcontrol"
+                       placeholder="회원명"/>
+            </div>
+            <button type="submit" class="btn btn-primary mb-2">검색</button>
+        </form>
+    </div>
+    <div>
         <table class="table table-striped">
             <thead>
             <tr>
@@ -16,8 +25,10 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="member : ${members}">
-                <td th:text="${member.id}"></td>
+            <tr th:each="member: ${memberPage.getContent()}"
+                th:with="number=${memberPage.getTotalElements() - (memberPage.getNumber() * memberPage.getNumberOfElements())}"
+            >
+                <td th:text="${number - memberStat.index}"></td>
                 <td><a th:href="@{/members/{id} (id=${member.id})}" th:text="${member.name}"></a></td>
                 <td th:text="${member.address?.city}"></td><!-- ?문법은 널체크문법. -->
                 <td th:text="${member.address?.street}"></td>
@@ -34,7 +45,7 @@
                 <li th:class="${page.firstPage}?'disabled':''">
                     <span th:if='${page.firstPage}'>← First</span>
                     <a th:if='${not page.firstPage}' th:href='@{${page.url}(page=0,size=${page.size})}'>←
-                        First</a>
+                        처음</a>
                 </li>
                 <li th:class="${page.hasPreviousPage}? '' : 'disabled'">
                     <span th:if='${not page.hasPreviousPage}'>«</span>
@@ -57,7 +68,7 @@
                 <li th:class="${page.lastPage}? 'disabled' : ''">
                     <span th:if='${page.lastPage}'>Last →</span>
                     <a th:if='${not page.lastPage}'
-                       th:href='@{${page.url}(page=${page.totalPages - 1},size=${page.size})}'>Last →</a>
+                       th:href='@{${page.url}(page=${page.totalPages - 1},size=${page.size})}'>마지막 →</a>
                 </li>
             </ul>
         </div>
