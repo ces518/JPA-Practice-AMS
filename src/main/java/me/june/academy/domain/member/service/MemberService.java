@@ -53,7 +53,7 @@ public class MemberService {
         Member member = memberForm.toEntity();
         Member findMember = findMember(memberForm.getId());
         if (findMember.isDisabled()) {
-            throw new BadRequestException("비활성화 처리된 회원은 수정할 수 없습니다.");
+            throw new BadRequestException("비활성화 처리된 학원생은 수정할 수 없습니다.");
         }
         findMember.update(member);
     }
@@ -63,7 +63,7 @@ public class MemberService {
     public void deleteMember(Long id) {
         Member findMember = findMember(id);
         if (findMember.isDisabled()) {
-            throw new BadRequestException("이미 비활성화 처리된 회원입니다.");
+            throw new BadRequestException("이미 비활성화 처리된 학원생 입니다.");
         }
         findMember.disable();
     }
