@@ -1,6 +1,7 @@
 package me.june.academy.domain.teacher;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import me.june.academy.model.BaseEntity;
@@ -29,4 +30,34 @@ public class Teacher extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private Status status;
+
+    @Builder
+    public Teacher(String name, String phone) {
+        this(name, phone, Status.AVAILABLE);
+    }
+
+    public Teacher(String name, String phone, Status status) {
+        this.name = name;
+        this.phone = phone;
+        this.status = status;
+    }
+
+    public void update(Teacher teacher) {
+        this.name = teacher.getName();
+        this.phone = teacher.getPhone();
+    }
+
+    public void disable() {
+        this.status = Status.DISABLED;
+    }
+
+    public boolean isAvailable() {
+        return this.status == Status.AVAILABLE;
+    }
+
+    public boolean isDisabled() {
+        return !isAvailable();
+    }
+
+
 }

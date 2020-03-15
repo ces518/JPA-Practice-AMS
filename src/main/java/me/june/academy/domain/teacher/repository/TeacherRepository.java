@@ -9,5 +9,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * Date: 2020-03-09
  * Time: 23:24
  **/
-public interface TeacherRepository extends JpaRepository<Teacher, Long> {
+public interface TeacherRepository extends JpaRepository<Teacher, Long>, TeacherRepositoryCustom {
 }
