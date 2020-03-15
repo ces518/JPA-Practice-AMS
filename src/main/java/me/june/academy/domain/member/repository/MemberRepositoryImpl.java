@@ -46,6 +46,6 @@ public class MemberRepositoryImpl extends QuerydslRepositorySupport implements M
         if (!StringUtils.hasText(name)) {
             return null;
         }
-        return member.name.like(name);
+        return member.name.like(name + "%");
     }
 }

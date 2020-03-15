@@ -1,6 +1,7 @@
 package me.june.academy.domain.member.web;
 
 import lombok.RequiredArgsConstructor;
+import me.june.academy.common.BadRequestException;
 import me.june.academy.common.Message;
 import me.june.academy.domain.member.Member;
 import me.june.academy.domain.member.repository.MemberSearch;
@@ -40,10 +41,10 @@ public class MemberController {
     public String list(Pageable pageable,
                        MemberSearch memberSearch,
                        Model model) {
-        Page<Member> page = memberService.findAll(memberSearch, pageable);
-        PageWrapper<Member> pageWrapper = new PageWrapper<>(page, "/members");
+        Page<Member> memberPage = memberService.findAll(memberSearch, pageable);
+        PageWrapper<Member> pageWrapper = new PageWrapper<>(memberPage, "/members");
 
-        model.addAttribute("members", page.getContent());
+        model.addAttribute("memberPage", memberPage);
         model.addAttribute("page", pageWrapper);
         return "members/list";
     }
@@ -66,6 +67,9 @@ public class MemberController {
     @GetMapping("{id}/edit")
     public String editForm(@PathVariable Long id, Model model) {
         Member findMember = memberService.findMember(id);
+        if (findMember.isDisabled()) {
+            throw new BadRequestException("비활성화 처리된 회원은 수정할 수 없습니다.");
+        }
         model.addAttribute("memberForm", new MemberForm(findMember));
         return MEMBER_FORM;
     }
@@ -99,5 +103,11 @@ public class MemberController {
         memberService.deleteMember(id);
         redirectAttributes.addFlashAttribute("message", Message.DELETED.getMessage());
         return "redirect:/members";
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public String errorPage(RuntimeException e, RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("message", e.getMessage());
+        return "errors/error";
     }
 }

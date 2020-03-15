@@ -28,12 +28,12 @@ public class MemberForm {
     private String zipcode;
 
     public MemberForm(Member member) {
-        this.id = member.getId();
-        this.name = member.getName();
-        this.phone = member.getPhone();
-        this.city = member.getAddress().getCity();
-        this.street = member.getAddress().getStreet();
-        this.zipcode = member.getAddress().getZipcode();
+        this(member.getId(),
+                member.getName(),
+                member.getPhone(),
+                member.getAddress().getCity(),
+                member.getAddress().getStreet(),
+                member.getAddress().getZipcode());
     }
 
     @Builder

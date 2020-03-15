@@ -55,6 +55,13 @@ public class Member extends BaseEntity {
         this.name = member.getName();
         this.address = member.getAddress();
         this.phone = member.getPhone();
-        this.status = member.getStatus();
+    }
+
+    public boolean isAvailable() {
+        return this.status == Status.AVAILABLE;
+    }
+
+    public boolean isDisabled() {
+        return !isAvailable();
     }
 }
