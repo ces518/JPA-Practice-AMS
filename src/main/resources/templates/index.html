@@ -8,9 +8,12 @@
 <div class="container">
     <div th:replace="fragments/bodyHeader :: bodyHeader" />
     <div class="jumbotron"> <h1>Academy</h1>
-        <p class="lead">회원 기능</p> <p>
-            <a class="btn btn-lg btn-secondary" th:href="@{/members/new}">회원 가입</a>
-            <a class="btn btn-lg btn-secondary" th:href="@{/members}">회원 목록</a> </p>
+        <p class="lead">학생 기능</p> <p>
+            <a class="btn btn-lg btn-secondary" th:href="@{/members/new}">학생 등록</a>
+            <a class="btn btn-lg btn-secondary" th:href="@{/members}">학생 목록</a></p>
+        <p class="lead">선생님 기능</p> <p>
+            <a class="btn btn-lg btn-secondary" th:href="@{/teachers/new}">선생님 등록</a>
+            <a class="btn btn-lg btn-secondary" th:href="@{/teachers}">선생님 목록</a></p>
         <!--<a class="btn btn-lg btn-dark" href="#">검정버튼</a>-->
         <!--<a class="btn btn-lg btn-info" href="#">청록버튼</a>-->
     </div>

@@ -5,12 +5,14 @@ import me.june.academy.common.Message;
 import me.june.academy.domain.teacher.Teacher;
 import me.june.academy.domain.teacher.repository.TeacherSearch;
 import me.june.academy.domain.teacher.service.TeacherService;
+import me.june.academy.domain.teacher.validator.TeacherValidator;
 import me.june.academy.utils.PageWrapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -28,6 +30,11 @@ import javax.validation.Valid;
 public class TeacherController {
     private static final String TEACHER_FORM = "teachers/regist";
     private final TeacherService teacherService;
+
+    @InitBinder("teacherForm")
+    public void teacherValidator(WebDataBinder webDataBinder) {
+        webDataBinder.addValidators(new TeacherValidator());
+    }
 
     @GetMapping
     public String list(TeacherSearch teacherSearch,

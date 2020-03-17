@@ -1,0 +1,76 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+<body>
+<div class="container">
+    <div th:replace="fragments/bodyHeader :: bodyHeader" />
+    <div>
+        <form th:object="${teacherSearch}" class="form-inline">
+            <div class="form-group mb-2">
+                <input type="text" th:field="*{name}" class="formcontrol"
+                       placeholder="선생님 명"/>
+            </div>
+            <button type="submit" class="btn btn-primary mb-2">검색</button>
+        </form>
+    </div>
+    <div>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>이름</th>
+                <th>상태</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="teacher: ${teacherPage.getContent()}"
+                th:with="number=${teacherPage.getTotalElements() - (teacherPage.getNumber() * teacherPage.getNumberOfElements())}"
+            >
+                <td th:text="${number - teacherStat.index}"></td>
+                <td><a th:href="@{/teachers/{id} (id=${teacher.id})}" th:text="${teacher.name}"></a></td>
+                <td th:text="${teacher.status}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination Bar -->
+    <div th:fragment='paginationbar'>
+        <div class="text-center">
+            <ul class='pagination pagination-centered'>
+                <li th:class="${page.firstPage}?'disabled':''">
+                    <span th:if='${page.firstPage}'>← First</span>
+                    <a th:if='${not page.firstPage}' th:href='@{${page.url}(page=0,size=${page.size})}'>←
+                        처음</a>
+                </li>
+                <li th:class="${page.hasPreviousPage}? '' : 'disabled'">
+                    <span th:if='${not page.hasPreviousPage}'>«</span>
+                    <a th:if='${page.hasPreviousPage}'
+                       th:href='@{${page.url}(page=${page.number-2},size=${page.size})}'
+                       title='Go to previous page'>«</a>
+                </li>
+                <li th:each='item : ${page.items}' th:class="${item.current}? 'active' : ''">
+                    <span th:if='${item.current}' th:text='${item.number}'>1</span>
+                    <a th:if='${not item.current}'
+                       th:href='@{${page.url}(page=${item.number-1},size=${page.size})}'><span
+                            th:text='${item.number}'>1</span></a>
+                </li>
+                <li th:class="${page.hasNextPage}? '' : 'disabled'">
+                    <span th:if='${not page.hasNextPage}'>»</span>
+                    <a th:if='${page.hasNextPage}'
+                       th:href='@{${page.url}(page=${page.number},size=${page.size})}'
+                       title='Go to next page'>»</a>
+                </li>
+                <li th:class="${page.lastPage}? 'disabled' : ''">
+                    <span th:if='${page.lastPage}'>Last →</span>
+                    <a th:if='${not page.lastPage}'
+                       th:href='@{${page.url}(page=${page.totalPages - 1},size=${page.size})}'>마지막 →</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div th:replace="fragments/footer :: footer" />
+</div> <!-- /container -->
+</body>
+</html>
