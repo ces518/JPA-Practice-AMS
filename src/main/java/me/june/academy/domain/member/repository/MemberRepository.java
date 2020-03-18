@@ -3,6 +3,8 @@ package me.june.academy.domain.member.repository;
 import me.june.academy.domain.member.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 /**
  * Created by IntelliJ IDEA.
  * User: june

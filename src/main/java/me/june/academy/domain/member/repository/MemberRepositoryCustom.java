@@ -4,6 +4,8 @@ import me.june.academy.domain.member.Member;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 /**
  * Created by IntelliJ IDEA.
  * User: june
@@ -12,4 +14,6 @@ import org.springframework.data.domain.Pageable;
  **/
 public interface MemberRepositoryCustom {
     Page<Member> findAll(MemberSearch memberSearch, Pageable pageable);
+
+    List<Member> findAllByIdNotIn(List<Long> ids);
 }

@@ -1,5 +1,6 @@
 package me.june.academy.domain.member.repository;
 
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -42,10 +43,27 @@ public class MemberRepositoryImpl extends QuerydslRepositorySupport implements M
         return new PageImpl<>(members, pageable, query.fetchCount());
     }
 
+    @Override
+    public List<Member> findAllByIdNotIn(List<Long> ids) {
+        return queryFactory
+                .select(member)
+                .from(member)
+                .where(notInIds(ids))
+                .orderBy(member.id.desc())
+                .fetch();
+    }
+
     private BooleanExpression likeName(String name) {
         if (!StringUtils.hasText(name)) {
             return null;
         }
         return member.name.like(name + "%");
+    }
+
+    private BooleanExpression notInIds(List<Long> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return null;
+        }
+        return member.id.notIn(ids);
     }
 }

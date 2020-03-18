@@ -55,7 +55,7 @@ class GroupMemberServiceTest {
         GroupMember savedGroupMember = groupMemberRepository.save(groupMember);
 
         // when
-        groupMemberService.deleteGroupMember(savedGroupMember.getId());
+        groupMemberService.deleteGroupMember(groupsA.getId(), memberA.getId());
         Optional<GroupMember> optionalGroupMember = groupMemberRepository.findById(savedGroupMember.getId());
 
         // then
@@ -73,7 +73,7 @@ class GroupMemberServiceTest {
 
         // when
         NotFoundGroupMemberException exception = Assertions.assertThrows(NotFoundGroupMemberException.class, () -> {
-            groupMemberService.deleteGroupMember(savedGroupMember.getId() + 1);
+            groupMemberService.deleteGroupMember(groupsA.getId() + 1, memberA.getId() + 1);
         });
 
         // then
@@ -81,7 +81,7 @@ class GroupMemberServiceTest {
     }
 
     @Test
-    public void 반_소속학생_삭제_실패_id값_null() throws Exception {
+    public void 반_소속학생_삭제_실패_groupsId값_null() throws Exception {
         // given
         Groups groupsA = groupsRepository.save(new Groups("groupsA"));
         Member memberA = memberRepository.save(createMember("memberA", "경기도", "수원시", "010-1234-1234"));
@@ -91,11 +91,47 @@ class GroupMemberServiceTest {
 
         // when
         IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            groupMemberService.deleteGroupMember(null);
+            groupMemberService.deleteGroupMember(null, memberA.getId());
         });
 
         // then
-        assertThat(exception.getMessage()).isEqualTo("GroupMember id should be not null");
+        assertThat(exception.getMessage()).isEqualTo("Groups id should be not null");
+    }
+    
+    @Test
+    public void 반_소속학생_삭제_실패_memberId값_null() throws Exception {
+        // given
+        Groups groupsA = groupsRepository.save(new Groups("groupsA"));
+        Member memberA = memberRepository.save(createMember("memberA", "경기도", "수원시", "010-1234-1234"));
+
+        GroupMember groupMember = new GroupMember(groupsA, memberA);
+        GroupMember savedGroupMember = groupMemberRepository.save(groupMember);
+
+        // when
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            groupMemberService.deleteGroupMember(groupsA.getId(), null);
+        });
+
+        // then
+        assertThat(exception.getMessage()).isEqualTo("Member id should be not null");
+    }
+    
+    @Test
+    public void 반_소속학생_삭제_실패_groupsId_memberId값_null() throws Exception {
+        // given
+        Groups groupsA = groupsRepository.save(new Groups("groupsA"));
+        Member memberA = memberRepository.save(createMember("memberA", "경기도", "수원시", "010-1234-1234"));
+
+        GroupMember groupMember = new GroupMember(groupsA, memberA);
+        GroupMember savedGroupMember = groupMemberRepository.save(groupMember);
+
+        // when
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            groupMemberService.deleteGroupMember(null, null);
+        });
+
+        // then
+        assertThat(exception.getMessage()).isEqualTo("Groups id should be not null");
     }
     
     private Member createMember(String name, String city, String street, String phone) {

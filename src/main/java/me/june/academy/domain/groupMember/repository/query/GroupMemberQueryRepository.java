@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static me.june.academy.domain.groupMember.QGroupMember.groupMember;
@@ -36,5 +37,4 @@ public class GroupMemberQueryRepository {
                 .orderBy(groupMember.id.asc())
                 .fetch();
     }
-
 }

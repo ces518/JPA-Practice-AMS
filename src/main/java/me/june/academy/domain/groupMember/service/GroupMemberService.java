@@ -16,6 +16,7 @@ import org.springframework.util.Assert;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 /**
  * Created by IntelliJ IDEA.
@@ -31,10 +32,20 @@ public class GroupMemberService {
     private final GroupsService groupsService;
     private final MemberService memberService;
 
+    public Optional<GroupMember> findGroupMember(Long groupsId, Long memberId) {
+        Assert.notNull(groupsId, "Groups id should be not null");
+        Assert.notNull(memberId, "Member id should be not null");
+        return groupMemberRepository.findByGroupIdAndMemberId(groupsId, memberId);
+    }
+
     @Transactional
     public Long saveGroupMember(Long groupsId, Long memberId) {
         Groups findGroups = groupsService.findGroups(groupsId);
         Member findMember = memberService.findMember(memberId);
+
+        // 중복 검사
+        findGroupMember(groupsId, memberId)
+                .ifPresent(groupMember -> new DuplicateGroupMemberException("이미 소속된 학원생 입니다."));
 
         GroupMember groupMember = new GroupMember(findGroups, findMember);
         GroupMember savedGroupMember = groupMemberRepository.save(groupMember);
@@ -42,10 +53,10 @@ public class GroupMemberService {
     }
 
     @Transactional
-    public void deleteGroupMember(Long groupsMemberId) {
-        Assert.notNull(groupsMemberId, "GroupMember id should be not null");
-        GroupMember findGroupMember = groupMemberRepository.findById(groupsMemberId)
+    public void deleteGroupMember(Long groupsId, Long memberId) {
+        GroupMember findGroupMember = findGroupMember(groupsId, memberId)
                 .orElseThrow(() -> new NotFoundGroupMemberException("존재하지 않는 소속 학원생 입니다."));
+
         groupMemberRepository.delete(findGroupMember);
     }
 }

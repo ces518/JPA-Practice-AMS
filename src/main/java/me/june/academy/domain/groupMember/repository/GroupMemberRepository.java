@@ -4,6 +4,7 @@ import me.june.academy.domain.groupMember.GroupMember;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by IntelliJ IDEA.
@@ -12,4 +13,5 @@ import java.util.List;
  * Time: 23:22
  **/
 public interface GroupMemberRepository extends JpaRepository<GroupMember, Long> {
+    Optional<GroupMember> findByGroupIdAndMemberId(Long groupId, Long memberId);
 }

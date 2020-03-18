@@ -2,10 +2,14 @@ package me.june.academy.domain.groups.web;
 
 import lombok.RequiredArgsConstructor;
 import me.june.academy.common.Message;
+import me.june.academy.domain.groupMember.repository.query.GroupMemberQueryDto;
+import me.june.academy.domain.groupMember.repository.query.GroupMemberQueryRepository;
 import me.june.academy.domain.groups.Groups;
 import me.june.academy.domain.groups.repository.GroupsSearch;
 import me.june.academy.domain.groups.service.GroupsService;
 import me.june.academy.domain.groups.validator.GroupsValidator;
+import me.june.academy.domain.member.Member;
+import me.june.academy.domain.member.repository.MemberRepository;
 import me.june.academy.utils.PageWrapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +21,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by IntelliJ IDEA.
@@ -30,6 +36,8 @@ import javax.validation.Valid;
 public class GroupsController {
     private static final String GROUPS_FORM = "groups/regist";
     private final GroupsService groupsService;
+    private final GroupMemberQueryRepository groupMemberQueryRepository;
+    private final MemberRepository memberRepository;
 
     @InitBinder("groupsForm")
     public void groupsValidator(WebDataBinder webDataBinder) {
@@ -57,7 +65,19 @@ public class GroupsController {
     @GetMapping("{id}")
     public String view(@PathVariable Long id, Model model) {
         Groups findGroups = groupsService.findGroups(id);
+        /* 소속 학원생 */
+        List<GroupMemberQueryDto> groupMembers = groupMemberQueryRepository.findAllByGroupsId(id);
+        /* 소속 학원생 id 목록 */
+        List<Long> groupMemberIds = groupMembers.stream()
+                .map(groupMember -> groupMember.getMemberId())
+                .collect(Collectors.toList());
+
+        /* 추가 가능한 학원생 */
+        List<Member> notInMembers = memberRepository.findAllByIdNotIn(groupMemberIds);
+
         model.addAttribute("groups", findGroups);
+        model.addAttribute("groupMembers", groupMembers);
+        model.addAttribute("notInMembers", notInMembers);
         return "groups/view";
     }
 

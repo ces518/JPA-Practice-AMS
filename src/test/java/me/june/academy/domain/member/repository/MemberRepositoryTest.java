@@ -10,6 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -58,6 +60,31 @@ class MemberRepositoryTest {
         assertThat(totalCount).isEqualTo(1);
         assertThat(members.size()).isEqualTo(1);
         assertThat(members.get(0).getName()).isEqualTo("memberB");
+    }
+
+    @Test
+    public void findAllByIdNotIn_notEmpty() throws Exception {
+        // given
+        List<Long> ids = Arrays.asList(1L, 3L);
+
+        // when
+        List<Member> members = memberRepository.findAllByIdNotIn(ids);
+
+        // then
+        assertThat(members.size()).isEqualTo(1);
+        assertThat(members.get(0).getName()).isEqualTo("memberB");
+    }
+
+    @Test
+    public void findAllByIdNotIn_emptyList() throws Exception {
+        // given
+        List ids = new ArrayList<>();
+
+        // when
+        List<Member> members = memberRepository.findAllByIdNotIn(ids);
+
+        // then
+        assertThat(members.size()).isEqualTo(3);
     }
 
     private Member createMember(String name, String city, String street, String phone) {
