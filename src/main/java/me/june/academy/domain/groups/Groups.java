@@ -27,4 +27,21 @@ public class Groups extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private Status status;
+
+    public Groups(String name) {
+        this(name, Status.AVAILABLE);
+    }
+
+    public Groups(String name, Status status) {
+        this.name = name;
+        this.status = status;
+    }
+
+    public void update(Groups groups) {
+        this.name = groups.getName();
+    }
+
+    public void disable() {
+        this.status = Status.DISABLED;
+    }
 }
