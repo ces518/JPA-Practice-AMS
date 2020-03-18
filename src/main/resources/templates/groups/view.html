@@ -18,6 +18,25 @@
             <th>상태</th>
             <td th:text="${groups.status}"></td>
         </tr>
+        <tr>
+            <th>소속 학생</th>
+            <td>
+                <p th:each="groupMember: ${groupMembers}">
+                    <span th:text="${groupMember.memberName}"></span>
+                    <a
+                        href="#delete"
+                        class="btn btn-sm btn-danger"
+                        th:attr="onclick=|deleteGroupMember(${groupMember.groupsId}, ${groupMember.memberId})|">삭제</a>
+                </p>
+                <form th:action="@{/groups/{id}/members (id=${groups.id})}" method="post" onsubmit="return createGroupMember();">
+                    <select name="memberId">
+                        <option value="">선택하세요</option>
+                        <option th:each="member: ${notInMembers}" th:value="${member.id}" th:text="${member.name}"></option>
+                    </select>
+                    <button type="submit" class="btn btn-sm btn-primary">추가</button>
+                </form>
+            </td>
+        </tr>
     </table>
     <div style="text-align: right;">
         <a class="btn btn-sm btn-dark" href="#edit" th:href="@{/groups/{id}/edit (id=${groups.id})}">수정</a>
@@ -41,6 +60,29 @@
         form.appendChild(method);
         document.body.appendChild(form);
         form.submit();
+    }
+
+    function deleteGroupMember(groupsId, memberId) {
+        const form = document.createElement('form');
+        const method = document.createElement('input');
+
+        method.type = 'hidden';
+        method.name = '_method';
+        method.value = 'DELETE';
+        form.action = `/groups/${groupsId}/members/${memberId}`;
+        form.method = 'post';
+
+        form.appendChild(method);
+        document.body.appendChild(form);
+        form.submit();
+    }
+
+    function createGroupMember() {
+        const target = event.target;
+        if (!target.memberId.value) {
+            alert('추가할 학생을 선택해 주세요.');
+            return false;
+        }
     }
 </script>
 </body>
