@@ -1,6 +1,7 @@
 package me.june.academy.domain.groups.service;
 
 import lombok.RequiredArgsConstructor;
+import me.june.academy.common.BadRequestException;
 import me.june.academy.domain.groups.Groups;
 import me.june.academy.domain.groups.repository.GroupsRepository;
 import me.june.academy.domain.groups.repository.GroupsSearch;
@@ -47,6 +48,10 @@ public class GroupsService {
     public void updateGroups(GroupsForm groupsForm) {
         Groups groups = groupsForm.toEntity();
         Groups findGroups = findGroups(groupsForm.getId());
+        if (findGroups.isDisabled()) {
+            throw new BadRequestException("비활성화 상태인 반의 정보는 수정할 수 없습니다.");
+        }
+
         findGroups.update(groups);
     }
 
@@ -54,6 +59,9 @@ public class GroupsService {
     @Transactional
     public void deleteGroups(Long id) {
         Groups findGroups = findGroups(id);
+        if (findGroups.isDisabled()) {
+            throw new BadRequestException("이미 비활성화된 반 입니다.");
+        }
         findGroups.disable();
     }
 }

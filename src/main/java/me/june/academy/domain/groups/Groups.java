@@ -44,4 +44,12 @@ public class Groups extends BaseEntity {
     public void disable() {
         this.status = Status.DISABLED;
     }
+
+    public boolean isAvailable() {
+        return this.status == Status.AVAILABLE;
+    }
+
+    public boolean isDisabled() {
+        return !isAvailable();
+    }
 }

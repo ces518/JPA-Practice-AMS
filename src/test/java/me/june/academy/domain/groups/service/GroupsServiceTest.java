@@ -1,5 +1,6 @@
 package me.june.academy.domain.groups.service;
 
+import me.june.academy.common.BadRequestException;
 import me.june.academy.domain.groups.Groups;
 import me.june.academy.domain.groups.repository.GroupsRepository;
 import me.june.academy.domain.groups.repository.GroupsSearch;
@@ -136,7 +137,8 @@ class GroupsServiceTest {
 
         // when
         groupsService.updateGroups(form);
-        Groups findGroups = groupsService.findGroups(savedGroupsId);
+        Optional<Groups> optionalGroups = groupsRepository.findById(savedGroupsId);
+        Groups findGroups = optionalGroups.get();
 
         // then
         assertThat(findGroups.getName()).isEqualTo("groupA수정");
@@ -157,6 +159,106 @@ class GroupsServiceTest {
         });
 
         // then
-        assertThat(exception.getMessage()).isEqualTo("groupA수정");
+        assertThat(exception.getMessage()).isEqualTo("존재하지 않는 반 입니다.");
+    }
+    
+    @Test
+    public void 반_수정_실패_id값_null() throws Exception {
+        // given
+        Groups savedGroups = groupsRepository.save(new Groups("groupA"));
+        Long savedGroupsId = savedGroups.getId();
+
+        GroupsForm form = new GroupsForm("groupA수정");
+        form.setId(null);
+
+        // when
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            groupsService.updateGroups(form);
+        });
+
+        // then
+        assertThat(exception.getMessage()).isEqualTo("Groups id should be not null");
+    }
+    
+    @Test
+    public void 반_수정_실패_status_disabled() throws Exception {
+        // given
+        Groups savedGroups = groupsRepository.save(new Groups("groupA"));
+        savedGroups.disable();
+        
+        Long savedGroupsId = savedGroups.getId();
+
+        GroupsForm form = new GroupsForm("groupA수정");
+        form.setId(savedGroupsId);
+
+        // when
+        BadRequestException exception = Assertions.assertThrows(BadRequestException.class, () -> {
+            groupsService.updateGroups(form);
+        });
+
+        // then
+        assertThat(exception.getMessage()).isEqualTo("비활성화 상태인 반의 정보는 수정할 수 없습니다.");
+    }
+    
+    @Test
+    public void 반_삭제_성공() throws Exception {
+        // given
+        Groups savedGroups = groupsRepository.save(new Groups("groupA"));
+        Long savedGroupsId = savedGroups.getId();
+        
+        // when
+        groupsService.deleteGroups(savedGroupsId);
+        Optional<Groups> optionalGroups = groupsRepository.findById(savedGroupsId);
+        Groups findGroups = optionalGroups.get();
+
+        // then
+        assertThat(findGroups.getStatus()).isEqualTo(Status.DISABLED);
+    }
+
+    @Test
+    public void 반_삭제_실패_존재하지_않는_반() throws Exception {
+        // given
+        Groups savedGroups = groupsRepository.save(new Groups("groupA"));
+        Long savedGroupsId = savedGroups.getId();
+
+        // when
+        NotFoundGroupsException exception = Assertions.assertThrows(NotFoundGroupsException.class, () -> {
+            groupsService.deleteGroups(savedGroupsId + 1);
+        });
+
+        // then
+        assertThat(exception.getMessage()).isEqualTo("존재하지 않는 반 입니다.");
+    }
+    
+    @Test
+    public void 반_삭제_실패_id값_null() throws Exception {
+        // given
+        Groups savedGroups = groupsRepository.save(new Groups("groupA"));
+        Long savedGroupsId = savedGroups.getId();
+
+        // when
+        IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            groupsService.deleteGroups(null);
+        });
+
+        // then
+        assertThat(exception.getMessage()).isEqualTo("Groups id should be not null");
+    }
+    
+    @Test
+    public void 반_삭제_실패_status_disabled() throws Exception {
+        // given
+        Groups savedGroups = groupsRepository.save(new Groups("groupA"));
+        savedGroups.disable();
+
+        Long savedGroupsId = savedGroups.getId();
+
+        // when
+        BadRequestException exception = Assertions.assertThrows(BadRequestException.class, () -> {
+            groupsService.deleteGroups(savedGroupsId);
+        });
+
+        // then
+        assertThat(exception.getMessage()).isEqualTo("이미 비활성화된 반 입니다.");
     }
 }
