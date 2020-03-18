@@ -31,4 +31,9 @@ public class GroupMember extends BaseCreatedEntity {
     @ManyToOne
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
+
+    public GroupMember(Groups group, Member member) {
+        this.group = group;
+        this.member = member;
+    }
 }
