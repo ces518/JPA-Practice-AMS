@@ -105,9 +105,4 @@ public class MemberController {
         return "redirect:/members";
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    public String errorPage(RuntimeException e, Model model) {
-        model.addAttribute("message", e.getMessage());
-        return "errors/error";
-    }
 }

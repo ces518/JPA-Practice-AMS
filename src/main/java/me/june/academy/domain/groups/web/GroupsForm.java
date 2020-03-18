@@ -18,6 +18,10 @@ public class GroupsForm {
     private Long id;
     private String name;
 
+    public GroupsForm(Groups groups) {
+        this(groups.getName());
+    }
+
     public GroupsForm(String name) {
         this.name = name;
     }
