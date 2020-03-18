@@ -5,12 +5,14 @@ import me.june.academy.common.Message;
 import me.june.academy.domain.groups.Groups;
 import me.june.academy.domain.groups.repository.GroupsSearch;
 import me.june.academy.domain.groups.service.GroupsService;
+import me.june.academy.domain.groups.validator.GroupsValidator;
 import me.june.academy.utils.PageWrapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -28,6 +30,11 @@ import javax.validation.Valid;
 public class GroupsController {
     private static final String GROUPS_FORM = "groups/regist";
     private final GroupsService groupsService;
+
+    @InitBinder("groupsForm")
+    public void groupsValidator(WebDataBinder webDataBinder) {
+        webDataBinder.addValidators(new GroupsValidator());
+    }
 
     @GetMapping
     public String list(GroupsSearch groupsSearch,
@@ -47,7 +54,14 @@ public class GroupsController {
         return GROUPS_FORM;
     }
 
-    @GetMapping("{id}/new")
+    @GetMapping("{id}")
+    public String view(@PathVariable Long id, Model model) {
+        Groups findGroups = groupsService.findGroups(id);
+        model.addAttribute("groups", findGroups);
+        return "groups/view";
+    }
+
+    @GetMapping("{id}/edit")
     public String editForm(@PathVariable Long id, Model model) {
         Groups findGroups = groupsService.findGroups(id);
         model.addAttribute("groupsForm", new GroupsForm(findGroups));
