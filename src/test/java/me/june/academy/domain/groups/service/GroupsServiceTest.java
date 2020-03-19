@@ -183,9 +183,10 @@ class GroupsServiceTest {
     @Test
     public void 반_수정_실패_status_disabled() throws Exception {
         // given
-        Groups savedGroups = groupsRepository.save(new Groups("groupA"));
-        savedGroups.disable();
-        
+        Groups groups = new Groups("groupA");
+        groups.disable();
+        Groups savedGroups = groupsRepository.save(groups);
+
         Long savedGroupsId = savedGroups.getId();
 
         GroupsForm form = new GroupsForm("groupA수정");
@@ -248,8 +249,9 @@ class GroupsServiceTest {
     @Test
     public void 반_삭제_실패_status_disabled() throws Exception {
         // given
-        Groups savedGroups = groupsRepository.save(new Groups("groupA"));
-        savedGroups.disable();
+        Groups groups = new Groups("groupA");
+        groups.disable();
+        Groups savedGroups = groupsRepository.save(groups);
 
         Long savedGroupsId = savedGroups.getId();
 
