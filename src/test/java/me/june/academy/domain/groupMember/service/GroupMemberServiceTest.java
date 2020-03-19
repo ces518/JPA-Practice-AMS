@@ -46,6 +46,22 @@ class GroupMemberServiceTest {
     }
 
     @Test
+    public void 반_소속학생_등록_실패_중복등록() throws Exception {
+        // given
+        Groups groupsA = groupsRepository.save(new Groups("groupsA"));
+        Member memberA = memberRepository.save(createMember("memberA", "경기도", "수원시", "010-1234-1234"));
+
+        // when
+        groupMemberService.saveGroupMember(groupsA.getId(), memberA.getId());
+        DuplicateGroupMemberException exception = Assertions.assertThrows(DuplicateGroupMemberException.class, () -> {
+            groupMemberService.saveGroupMember(groupsA.getId(), memberA.getId());
+        });
+
+        // then
+        assertThat(exception.getMessage()).isEqualTo("이미 소속된 학원생 입니다.");
+    }
+
+    @Test
     public void 반_소속학생_삭제_성공() throws Exception {
         // given
         Groups groupsA = groupsRepository.save(new Groups("groupsA"));

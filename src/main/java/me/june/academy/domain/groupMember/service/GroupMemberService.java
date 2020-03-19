@@ -1,22 +1,17 @@
 package me.june.academy.domain.groupMember.service;
 
 import lombok.RequiredArgsConstructor;
-import me.june.academy.common.BadRequestException;
 import me.june.academy.domain.groupMember.GroupMember;
 import me.june.academy.domain.groupMember.repository.GroupMemberRepository;
 import me.june.academy.domain.groups.Groups;
-import me.june.academy.domain.groups.repository.GroupsSearch;
 import me.june.academy.domain.groups.service.GroupsService;
-import me.june.academy.domain.groups.service.NotFoundGroupsException;
 import me.june.academy.domain.member.Member;
 import me.june.academy.domain.member.service.MemberService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.function.Consumer;
 
 /**
  * Created by IntelliJ IDEA.
@@ -45,7 +40,9 @@ public class GroupMemberService {
 
         // 중복 검사
         findGroupMember(groupsId, memberId)
-                .ifPresent(groupMember -> new DuplicateGroupMemberException("이미 소속된 학원생 입니다."));
+                .ifPresent(groupMember -> {
+                    throw new DuplicateGroupMemberException("이미 소속된 학원생 입니다.");
+                });
 
         GroupMember groupMember = new GroupMember(findGroups, findMember);
         GroupMember savedGroupMember = groupMemberRepository.save(groupMember);
