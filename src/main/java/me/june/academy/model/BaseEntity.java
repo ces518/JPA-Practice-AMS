@@ -17,7 +17,6 @@ import javax.persistence.MappedSuperclass;
  * Date: 2020-03-09
  * Time: 22:42
  **/
-@EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
 @Getter
 public class BaseEntity extends BaseTimeEntity {

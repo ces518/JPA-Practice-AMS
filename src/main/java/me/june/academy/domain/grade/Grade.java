@@ -27,4 +27,29 @@ public class Grade extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private Status status;
+
+    public Grade(String name) {
+        this(name, Status.AVAILABLE);
+    }
+
+    public Grade(String name, Status status) {
+        this.name = name;
+        this.status = status;
+    }
+
+    public void update(Grade grade) {
+        this.name = grade.getName();
+    }
+
+    public boolean isAvailable() {
+        return this.status == Status.AVAILABLE;
+    }
+
+    public boolean isDisabled() {
+        return !isAvailable();
+    }
+
+    public void disable() {
+        this.status = Status.DISABLED;
+    }
 }
