@@ -26,7 +26,7 @@ class GradeServiceTest {
     @Autowired GradeRepository gradeRepository;
 
     @Test
-    public void 반_목록_조회() throws Exception {
+    public void 학년_목록_조회() throws Exception {
         // given
         gradeRepository.save(new Grade("gradeA"));
         gradeRepository.save(new Grade("gradeB"));
@@ -46,7 +46,7 @@ class GradeServiceTest {
     }
 
     @Test
-    public void 반_목록_조회_gradeA검색() throws Exception {
+    public void 학년_목록_조회_gradeA검색() throws Exception {
         // given
         gradeRepository.save(new Grade("gradeA"));
         gradeRepository.save(new Grade("gradeB"));
@@ -69,7 +69,7 @@ class GradeServiceTest {
     }
 
     @Test
-    public void 반_생성() throws Exception {
+    public void 학년_생성() throws Exception {
         // given
         GradeForm gradeForm = new GradeForm("gradeA");
 
@@ -83,7 +83,7 @@ class GradeServiceTest {
     }
 
     @Test
-    public void 반_상세_조회_성공() throws Exception {
+    public void 학년_상세_조회_성공() throws Exception {
         // given
         Grade savedGrade = gradeRepository.save(new Grade("gradeA"));
 
@@ -96,7 +96,7 @@ class GradeServiceTest {
     }
 
     @Test
-    public void 반_상세_조회_실패_존재하지_않는_반() throws Exception {
+    public void 학년_상세_조회_실패_존재하지_않는_반() throws Exception {
         // given
         Grade savedGrade = gradeRepository.save(new Grade("gradeA"));
         Long savedGradeId = savedGrade.getId();
@@ -110,7 +110,7 @@ class GradeServiceTest {
     }
 
     @Test
-    public void 반_상세_조회_실패_id값_null() throws Exception {
+    public void 학년_상세_조회_실패_id값_null() throws Exception {
         // given
         Grade savedGrade = gradeRepository.save(new Grade("gradeA"));
         Long savedGradeId = savedGrade.getId();
@@ -126,7 +126,7 @@ class GradeServiceTest {
     }
 
     @Test
-    public void 반_수정_성공() throws Exception {
+    public void 학년_수정_성공() throws Exception {
         // given
         Grade savedGrade = gradeRepository.save(new Grade("gradeA"));
         Long savedGradeId = savedGrade.getId();
@@ -144,7 +144,7 @@ class GradeServiceTest {
     }
 
     @Test
-    public void 반_수정_실패_존재하지_않는_반() throws Exception {
+    public void 학년_수정_실패_존재하지_않는_반() throws Exception {
         // given
         Grade savedGrade = gradeRepository.save(new Grade("gradeA"));
         Long savedGradeId = savedGrade.getId();
@@ -162,7 +162,7 @@ class GradeServiceTest {
     }
     
     @Test
-    public void 반_수정_실패_id값_null() throws Exception {
+    public void 학년_수정_실패_id값_null() throws Exception {
         // given
         Grade savedGrade = gradeRepository.save(new Grade("gradeA"));
         Long savedGradeId = savedGrade.getId();
@@ -180,7 +180,7 @@ class GradeServiceTest {
     }
 
     @Test
-    public void 반_수정_실패_status_disabled() throws Exception {
+    public void 학년_수정_실패_status_disabled() throws Exception {
         // given
         Grade grade = new Grade("gradeA");
         grade.disable();
