@@ -23,7 +23,7 @@ public class GradeValidator implements Validator {
         GradeForm form = (GradeForm) o;
 
         if (!StringUtils.hasText(form.getName()) || form.getName().length() > 80) {
-            errors.rejectValue("name", "reject", "반 이름은 빈 값이 오거나 80자를 넘을 수 없습니다.");
+            errors.rejectValue("name", "reject", "학년 이름은 빈 값이 오거나 80자를 넘을 수 없습니다.");
         }
     }
 }
