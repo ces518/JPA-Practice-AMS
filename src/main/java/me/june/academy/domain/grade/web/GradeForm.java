@@ -18,6 +18,10 @@ public class GradeForm {
     private Long id;
     private String name;
 
+    public GradeForm(Grade grade) {
+        this(grade.getName());
+    }
+
     public GradeForm(String name) {
         this.name = name;
     }
