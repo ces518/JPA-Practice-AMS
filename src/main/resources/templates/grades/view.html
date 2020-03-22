@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+<style>
+    .fieldError {
+        border-color: #bd2130;
+    }
+</style>
+<body>
+<div class="container">
+    <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+    <table class="table">
+        <tr>
+            <th>이름</th>
+            <td th:text="${grade.name}"></td>
+        </tr>
+        <tr>
+            <th>상태</th>
+            <td th:text="${grade.status}"></td>
+        </tr>
+    </table>
+    <div style="text-align: right;">
+        <a class="btn btn-sm btn-dark" href="#edit" th:href="@{/grades/{id}/edit (id=${grade.id})}">수정</a>
+        <a class="btn btn-sm btn-warning" href="#edit" th:attr="onclick=|deleteGrade(${grade.id})|">삭제</a>
+        <a class="btn btn-sm btn-info" th:href="@{/grades}">목록</a>
+    </div>
+    <br/>
+    <div th:replace="fragments/footer :: footer" />
+</div> <!-- /container -->
+<script>
+    function deleteGrade(id) {
+        const form = document.createElement('form');
+        const method = document.createElement('input');
+
+        method.type = 'hidden';
+        method.name = '_method';
+        method.value = 'DELETE';
+        form.action = `/grades/${id}`;
+        form.method = 'post';
+
+        form.appendChild(method);
+        document.body.appendChild(form);
+        form.submit();
+    }
+</script>
+</body>
+</html>

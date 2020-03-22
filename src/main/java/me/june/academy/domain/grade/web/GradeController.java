@@ -5,12 +5,14 @@ import me.june.academy.common.Message;
 import me.june.academy.domain.grade.Grade;
 import me.june.academy.domain.grade.repository.GradeSearch;
 import me.june.academy.domain.grade.service.GradeService;
+import me.june.academy.domain.grade.validator.GradeValidator;
 import me.june.academy.utils.PageWrapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -28,6 +30,11 @@ import javax.validation.Valid;
 public class GradeController {
     private static final String GRADE_FORM = "grades/regist";
     private final GradeService gradeService;
+
+    @InitBinder("gradeForm")
+    public void gradeValidator(WebDataBinder webDataBinder) {
+        webDataBinder.addValidators(new GradeValidator());
+    }
 
     @GetMapping
     public String list(GradeSearch gradeSearch,
@@ -54,7 +61,7 @@ public class GradeController {
         return "grades/view";
     }
 
-    @GetMapping("{id}/new")
+    @GetMapping("{id}/edit")
     public String editForm(@PathVariable Long id, Model model) {
         Grade findGrade = gradeService.findGrade(id);
         model.addAttribute("gradeForm", new GradeForm(findGrade));
@@ -73,7 +80,7 @@ public class GradeController {
         return "redirect:/grades/" + savedGradeId;
     }
 
-    @PostMapping("{id}/new")
+    @PostMapping("{id}/edit")
     public String updateGrade(@Valid @ModelAttribute GradeForm gradeForm,
                               BindingResult result,
                               RedirectAttributes redirectAttributes) {
