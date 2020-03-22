@@ -4,12 +4,8 @@ import lombok.Getter;
 import me.june.academy.domain.member.Member;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.EntityListeners;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -22,12 +18,12 @@ import javax.persistence.MappedSuperclass;
 public class BaseEntity extends BaseTimeEntity {
 
     @CreatedBy
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CREATED_BY")
     private Member createdBy;
 
     @LastModifiedBy
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "UPDATED_BY")
     private Member updatedBy;
 }

@@ -1,5 +1,7 @@
 package me.june.academy.domain.groupMember.service;
 
+import me.june.academy.domain.grade.Grade;
+import me.june.academy.domain.grade.repository.GradeRepository;
 import me.june.academy.domain.groupMember.GroupMember;
 import me.june.academy.domain.groupMember.repository.GroupMemberRepository;
 import me.june.academy.domain.groups.Groups;
@@ -25,11 +27,13 @@ class GroupMemberServiceTest {
     @Autowired MemberRepository memberRepository;
     @Autowired GroupMemberService groupMemberService;
     @Autowired GroupMemberRepository groupMemberRepository;
+    @Autowired GradeRepository gradeRepository;
 
     @Test
     public void 반_소속학생_등록() throws Exception {
         // given
-        Groups groupsA = groupsRepository.save(new Groups("groupsA"));
+        Grade savedGrade = gradeRepository.save(new Grade("gradeA"));
+        Groups groupsA = groupsRepository.save(new Groups("groupsA", savedGrade));
         Member memberA = memberRepository.save(createMember("memberA", "경기도", "수원시", "010-1234-1234"));
 
         // when
@@ -48,7 +52,8 @@ class GroupMemberServiceTest {
     @Test
     public void 반_소속학생_등록_실패_중복등록() throws Exception {
         // given
-        Groups groupsA = groupsRepository.save(new Groups("groupsA"));
+        Grade savedGrade = gradeRepository.save(new Grade("gradeA"));
+        Groups groupsA = groupsRepository.save(new Groups("groupsA", savedGrade));
         Member memberA = memberRepository.save(createMember("memberA", "경기도", "수원시", "010-1234-1234"));
 
         // when
@@ -64,7 +69,8 @@ class GroupMemberServiceTest {
     @Test
     public void 반_소속학생_삭제_성공() throws Exception {
         // given
-        Groups groupsA = groupsRepository.save(new Groups("groupsA"));
+        Grade savedGrade = gradeRepository.save(new Grade("gradeA"));
+        Groups groupsA = groupsRepository.save(new Groups("groupsA", savedGrade));
         Member memberA = memberRepository.save(createMember("memberA", "경기도", "수원시", "010-1234-1234"));
 
         GroupMember groupMember = new GroupMember(groupsA, memberA);
@@ -81,7 +87,8 @@ class GroupMemberServiceTest {
     @Test
     public void 반_소속학생_삭제_실패_존재하지_않는_소속학원생() throws Exception {
         // given
-        Groups groupsA = groupsRepository.save(new Groups("groupsA"));
+        Grade savedGrade = gradeRepository.save(new Grade("gradeA"));
+        Groups groupsA = groupsRepository.save(new Groups("groupsA", savedGrade));
         Member memberA = memberRepository.save(createMember("memberA", "경기도", "수원시", "010-1234-1234"));
 
         GroupMember groupMember = new GroupMember(groupsA, memberA);
@@ -99,7 +106,8 @@ class GroupMemberServiceTest {
     @Test
     public void 반_소속학생_삭제_실패_groupsId값_null() throws Exception {
         // given
-        Groups groupsA = groupsRepository.save(new Groups("groupsA"));
+        Grade savedGrade = gradeRepository.save(new Grade("gradeA"));
+        Groups groupsA = groupsRepository.save(new Groups("groupsA", savedGrade));
         Member memberA = memberRepository.save(createMember("memberA", "경기도", "수원시", "010-1234-1234"));
 
         GroupMember groupMember = new GroupMember(groupsA, memberA);
@@ -117,7 +125,8 @@ class GroupMemberServiceTest {
     @Test
     public void 반_소속학생_삭제_실패_memberId값_null() throws Exception {
         // given
-        Groups groupsA = groupsRepository.save(new Groups("groupsA"));
+        Grade savedGrade = gradeRepository.save(new Grade("gradeA"));
+        Groups groupsA = groupsRepository.save(new Groups("groupsA", savedGrade));
         Member memberA = memberRepository.save(createMember("memberA", "경기도", "수원시", "010-1234-1234"));
 
         GroupMember groupMember = new GroupMember(groupsA, memberA);
@@ -135,7 +144,8 @@ class GroupMemberServiceTest {
     @Test
     public void 반_소속학생_삭제_실패_groupsId_memberId값_null() throws Exception {
         // given
-        Groups groupsA = groupsRepository.save(new Groups("groupsA"));
+        Grade savedGrade = gradeRepository.save(new Grade("gradeA"));
+        Groups groupsA = groupsRepository.save(new Groups("groupsA", savedGrade));
         Member memberA = memberRepository.save(createMember("memberA", "경기도", "수원시", "010-1234-1234"));
 
         GroupMember groupMember = new GroupMember(groupsA, memberA);

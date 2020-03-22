@@ -24,11 +24,11 @@ public class GroupMember extends BaseCreatedEntity {
     @Column(name = "GROUP_MEMBER")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "GROUP_ID")
     private Groups group;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 

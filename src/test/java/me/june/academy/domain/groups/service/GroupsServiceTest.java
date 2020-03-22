@@ -1,6 +1,8 @@
 package me.june.academy.domain.groups.service;
 
 import me.june.academy.common.BadRequestException;
+import me.june.academy.domain.grade.Grade;
+import me.june.academy.domain.grade.repository.GradeRepository;
 import me.june.academy.domain.groups.Groups;
 import me.june.academy.domain.groups.repository.GroupsRepository;
 import me.june.academy.domain.groups.repository.GroupsSearch;
@@ -25,13 +27,15 @@ class GroupsServiceTest {
 
     @Autowired GroupsService groupsService;
     @Autowired GroupsRepository groupsRepository;
+    @Autowired GradeRepository gradeRepository;
     
     @Test
     public void 반_목록_조회() throws Exception {
         // given
-        groupsRepository.save(new Groups("groupA"));
-        groupsRepository.save(new Groups("groupB"));
-        groupsRepository.save(new Groups("groupC"));
+        Grade savedGrade = gradeRepository.save(new Grade("gradeA"));
+        groupsRepository.save(new Groups("groupA", savedGrade));
+        groupsRepository.save(new Groups("groupB", savedGrade));
+        groupsRepository.save(new Groups("groupC", savedGrade));
 
         GroupsSearch groupsSearch = new GroupsSearch();
         PageRequest pageRequest = PageRequest.of(0, 10);
@@ -49,9 +53,10 @@ class GroupsServiceTest {
     @Test
     public void 반_목록_조회_groupB검색() throws Exception {
         // given
-        groupsRepository.save(new Groups("groupA"));
-        groupsRepository.save(new Groups("groupB"));
-        groupsRepository.save(new Groups("groupC"));
+        Grade savedGrade = gradeRepository.save(new Grade("gradeA"));
+        groupsRepository.save(new Groups("groupA", savedGrade));
+        groupsRepository.save(new Groups("groupB", savedGrade));
+        groupsRepository.save(new Groups("groupC", savedGrade));
 
         GroupsSearch groupsSearch = new GroupsSearch("groupB");
         PageRequest pageRequest = PageRequest.of(0, 10);
@@ -71,7 +76,8 @@ class GroupsServiceTest {
     @Test
     public void 반_생성() throws Exception {
         // given
-        GroupsForm groupA = new GroupsForm("groupA");
+        Grade savedGrade = gradeRepository.save(new Grade("gradeA"));
+        GroupsForm groupA = new GroupsForm("groupA", savedGrade.getId());
 
         // when
         Long savedGroupsId = groupsService.saveGroups(groupA);
@@ -86,7 +92,8 @@ class GroupsServiceTest {
     @Test
     public void 반_상세_조회_성공() throws Exception {
         // given
-        Groups savedGroups = groupsRepository.save(new Groups("groupA"));
+        Grade savedGrade = gradeRepository.save(new Grade("gradeA"));
+        Groups savedGroups = groupsRepository.save(new Groups("groupA", savedGrade));
         Long savedGroupsId = savedGroups.getId();
 
         // when
@@ -99,7 +106,8 @@ class GroupsServiceTest {
     @Test
     public void 반_상세_조회_실패_존재하지_않는_반() throws Exception {
         // given
-        Groups savedGroups = groupsRepository.save(new Groups("groupA"));
+        Grade savedGrade = gradeRepository.save(new Grade("gradeA"));
+        Groups savedGroups = groupsRepository.save(new Groups("groupA", savedGrade));
         Long savedGroupsId = savedGroups.getId();
 
         // when
@@ -114,7 +122,8 @@ class GroupsServiceTest {
     @Test
     public void 반_상세_조회_실패_id값_null() throws Exception {
         // given
-        Groups savedGroups = groupsRepository.save(new Groups("groupA"));
+        Grade savedGrade = gradeRepository.save(new Grade("gradeA"));
+        Groups savedGroups = groupsRepository.save(new Groups("groupA", savedGrade));
         Long savedGroupsId = savedGroups.getId();
 
         // when
@@ -129,10 +138,11 @@ class GroupsServiceTest {
     @Test
     public void 반_수정_성공() throws Exception {
         // given
-        Groups savedGroups = groupsRepository.save(new Groups("groupA"));
+        Grade savedGrade = gradeRepository.save(new Grade("gradeA"));
+        Groups savedGroups = groupsRepository.save(new Groups("groupA", savedGrade));
         Long savedGroupsId = savedGroups.getId();
 
-        GroupsForm form = new GroupsForm("groupA수정");
+        GroupsForm form = new GroupsForm("groupA수정", savedGrade.getId());
         form.setId(savedGroupsId);
 
         // when
@@ -147,10 +157,11 @@ class GroupsServiceTest {
     @Test
     public void 반_수정_실패_존재하지_않는_반() throws Exception {
         // given
-        Groups savedGroups = groupsRepository.save(new Groups("groupA"));
+        Grade savedGrade = gradeRepository.save(new Grade("gradeA"));
+        Groups savedGroups = groupsRepository.save(new Groups("groupA", savedGrade));
         Long savedGroupsId = savedGroups.getId();
 
-        GroupsForm form = new GroupsForm("groupA수정");
+        GroupsForm form = new GroupsForm("groupA수정", savedGrade.getId());
         form.setId(savedGroupsId + 1);
 
         // when
@@ -165,10 +176,11 @@ class GroupsServiceTest {
     @Test
     public void 반_수정_실패_id값_null() throws Exception {
         // given
-        Groups savedGroups = groupsRepository.save(new Groups("groupA"));
+        Grade savedGrade = gradeRepository.save(new Grade("gradeA"));
+        Groups savedGroups = groupsRepository.save(new Groups("groupA", savedGrade));
         Long savedGroupsId = savedGroups.getId();
 
-        GroupsForm form = new GroupsForm("groupA수정");
+        GroupsForm form = new GroupsForm("groupA수정", savedGrade.getId());
         form.setId(null);
 
         // when
@@ -183,13 +195,14 @@ class GroupsServiceTest {
     @Test
     public void 반_수정_실패_status_disabled() throws Exception {
         // given
-        Groups groups = new Groups("groupA");
+        Grade savedGrade = gradeRepository.save(new Grade("gradeA"));
+        Groups groups = new Groups("groupA", savedGrade);
         groups.disable();
         Groups savedGroups = groupsRepository.save(groups);
 
         Long savedGroupsId = savedGroups.getId();
 
-        GroupsForm form = new GroupsForm("groupA수정");
+        GroupsForm form = new GroupsForm("groupA수정", savedGrade.getId());
         form.setId(savedGroupsId);
 
         // when
@@ -204,7 +217,8 @@ class GroupsServiceTest {
     @Test
     public void 반_삭제_성공() throws Exception {
         // given
-        Groups savedGroups = groupsRepository.save(new Groups("groupA"));
+        Grade savedGrade = gradeRepository.save(new Grade("gradeA"));
+        Groups savedGroups = groupsRepository.save(new Groups("groupA", savedGrade));
         Long savedGroupsId = savedGroups.getId();
         
         // when
@@ -219,7 +233,8 @@ class GroupsServiceTest {
     @Test
     public void 반_삭제_실패_존재하지_않는_반() throws Exception {
         // given
-        Groups savedGroups = groupsRepository.save(new Groups("groupA"));
+        Grade savedGrade = gradeRepository.save(new Grade("gradeA"));
+        Groups savedGroups = groupsRepository.save(new Groups("groupA", savedGrade));
         Long savedGroupsId = savedGroups.getId();
 
         // when
@@ -234,7 +249,8 @@ class GroupsServiceTest {
     @Test
     public void 반_삭제_실패_id값_null() throws Exception {
         // given
-        Groups savedGroups = groupsRepository.save(new Groups("groupA"));
+        Grade savedGrade = gradeRepository.save(new Grade("gradeA"));
+        Groups savedGroups = groupsRepository.save(new Groups("groupA", savedGrade));
         Long savedGroupsId = savedGroups.getId();
 
         // when
@@ -249,7 +265,8 @@ class GroupsServiceTest {
     @Test
     public void 반_삭제_실패_status_disabled() throws Exception {
         // given
-        Groups groups = new Groups("groupA");
+        Grade savedGrade = gradeRepository.save(new Grade("gradeA"));
+        Groups groups = new Groups("groupA", savedGrade);
         groups.disable();
         Groups savedGroups = groupsRepository.save(groups);
 

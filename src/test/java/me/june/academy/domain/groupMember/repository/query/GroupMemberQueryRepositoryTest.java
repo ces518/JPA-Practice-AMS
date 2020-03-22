@@ -1,5 +1,7 @@
 package me.june.academy.domain.groupMember.repository.query;
 
+import me.june.academy.domain.grade.Grade;
+import me.june.academy.domain.grade.repository.GradeRepository;
 import me.june.academy.domain.groupMember.GroupMember;
 import me.june.academy.domain.groupMember.repository.GroupMemberRepository;
 import me.june.academy.domain.groups.Groups;
@@ -24,12 +26,14 @@ class GroupMemberQueryRepositoryTest {
     @Autowired GroupMemberQueryRepository groupMemberQueryRepository;
     @Autowired GroupsRepository groupsRepository;
     @Autowired MemberRepository memberRepository;
+    @Autowired GradeRepository gradeRepository;
 
     @Test
     public void findAllByGroupsId() throws Exception {
         // given
-        Groups groupsA = groupsRepository.save(new Groups("groupsA"));
-        Groups groupsB = groupsRepository.save(new Groups("groupsB"));
+        Grade savedGrade = gradeRepository.save(new Grade("gradeA"));
+        Groups groupsA = groupsRepository.save(new Groups("groupsA", savedGrade));
+        Groups groupsB = groupsRepository.save(new Groups("groupsB", savedGrade));
 
         Member memberA = memberRepository.save(createMember("memberA", "경기도", "수원시", "010-1234-1234"));
         Member memberB = memberRepository.save(createMember("memberB", "대전", "월평동", "010-1234-1234"));

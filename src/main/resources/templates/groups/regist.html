@@ -11,6 +11,17 @@
     <div th:replace="fragments/bodyHeader :: bodyHeader"/>
     <form role="form" th:object="${groupsForm}" method="post">
         <div class="form-group">
+            <label th:for="name">학년</label>
+            <select th:field="*{gradeId}" class="form-control"
+                    th:class="${#fields.hasErrors('name')}? 'form-control fieldError' : 'form-control'"
+                    th:each="grade: ${grades}">
+                    <option value="">학년을 선택하세요.</option>
+                    <option th:value="${grade.id}" th:text="${grade.name}"></option>
+            </select>
+            <p th:if="${#fields.hasErrors('gradeId')}"
+               th:errors="*{gradeId}">Incorrect date</p>
+        </div>
+        <div class="form-group">
             <label th:for="name">이름</label>
             <input type="text" th:field="*{name}" class="form-control"
                    placeholder="이름을 입력하세요"

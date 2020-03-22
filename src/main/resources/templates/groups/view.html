@@ -11,6 +11,10 @@
     <div th:replace="fragments/bodyHeader :: bodyHeader"/>
     <table class="table">
         <tr>
+            <th>학년</th>
+            <td th:text="${groups.grade.name}"></td>
+        </tr>
+        <tr>
             <th>이름</th>
             <td th:text="${groups.name}"></td>
         </tr>

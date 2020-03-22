@@ -99,6 +99,7 @@
 `반`
 - GROUPS
     - GROUP_ID (PK)
+    - GRADE_ID (FK)
     - NAME
     - STATUS
     - CREATED_AT
@@ -192,6 +193,7 @@
 - Groups
     - id: Long
     - name: String
+    - grade: Grade
     - status: Status
 
 - GroupTeacher

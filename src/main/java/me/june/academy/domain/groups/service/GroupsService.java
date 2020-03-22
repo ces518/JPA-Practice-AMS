@@ -2,6 +2,8 @@ package me.june.academy.domain.groups.service;
 
 import lombok.RequiredArgsConstructor;
 import me.june.academy.common.BadRequestException;
+import me.june.academy.domain.grade.Grade;
+import me.june.academy.domain.grade.service.GradeService;
 import me.june.academy.domain.groups.Groups;
 import me.june.academy.domain.groups.repository.GroupsRepository;
 import me.june.academy.domain.groups.repository.GroupsSearch;
@@ -21,16 +23,23 @@ import org.springframework.util.Assert;
 @Service
 @RequiredArgsConstructor
 public class GroupsService {
-
     private final GroupsRepository groupsRepository;
+    private final GradeService gradeService;
 
     // 목록 조회
     public Page<Groups> findAll(GroupsSearch groupsSearch, Pageable pageable) {
         return groupsRepository.findAll(groupsSearch, pageable);
     }
 
-    // 상세 조회
+    // 상세 조회 + 페치조인 (Grade[학년])
     public Groups findGroups(Long id) {
+        Assert.notNull(id, "Groups id should be not null");
+        return groupsRepository.findWithGradeById(id)
+                .orElseThrow(() -> new NotFoundGroupsException("존재하지 않는 반 입니다."));
+    }
+
+    // 상세 조회
+    private Groups findById(Long id) {
         Assert.notNull(id, "Groups id should be not null");
         return groupsRepository.findById(id)
                 .orElseThrow(() -> new NotFoundGroupsException("존재하지 않는 반 입니다."));
@@ -38,7 +47,9 @@ public class GroupsService {
 
     // 등록
     public Long saveGroups(GroupsForm groupsForm) {
-        Groups groups = groupsForm.toEntity();
+        Grade findGrade = gradeService.findGrade(groupsForm.getGradeId());
+        Groups groups = groupsForm.toEntity(findGrade);
+
         Groups savedGroups = groupsRepository.save(groups);
         return savedGroups.getId();
     }
@@ -46,11 +57,13 @@ public class GroupsService {
     // 수정
     @Transactional
     public void updateGroups(GroupsForm groupsForm) {
-        Groups groups = groupsForm.toEntity();
-        Groups findGroups = findGroups(groupsForm.getId());
+        Groups findGroups = findById(groupsForm.getId());
         if (findGroups.isDisabled()) {
             throw new BadRequestException("비활성화 상태인 반의 정보는 수정할 수 없습니다.");
         }
+
+        Grade findGrade = gradeService.findGrade(groupsForm.getGradeId());
+        Groups groups = groupsForm.toEntity(findGrade);
 
         findGroups.update(groups);
     }
@@ -58,7 +71,7 @@ public class GroupsService {
     // 삭제
     @Transactional
     public void deleteGroups(Long id) {
-        Groups findGroups = findGroups(id);
+        Groups findGroups = findById(id);
         if (findGroups.isDisabled()) {
             throw new BadRequestException("이미 비활성화된 반 입니다.");
         }

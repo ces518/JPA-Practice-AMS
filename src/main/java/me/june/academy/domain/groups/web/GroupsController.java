@@ -2,14 +2,18 @@ package me.june.academy.domain.groups.web;
 
 import lombok.RequiredArgsConstructor;
 import me.june.academy.common.Message;
+import me.june.academy.domain.grade.Grade;
+import me.june.academy.domain.grade.repository.GradeRepository;
 import me.june.academy.domain.groupMember.repository.query.GroupMemberQueryDto;
 import me.june.academy.domain.groupMember.repository.query.GroupMemberQueryRepository;
 import me.june.academy.domain.groups.Groups;
+import me.june.academy.domain.groups.repository.GroupsRepository;
 import me.june.academy.domain.groups.repository.GroupsSearch;
 import me.june.academy.domain.groups.service.GroupsService;
 import me.june.academy.domain.groups.validator.GroupsValidator;
 import me.june.academy.domain.member.Member;
 import me.june.academy.domain.member.repository.MemberRepository;
+import me.june.academy.model.Status;
 import me.june.academy.utils.PageWrapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -38,6 +42,7 @@ public class GroupsController {
     private final GroupsService groupsService;
     private final GroupMemberQueryRepository groupMemberQueryRepository;
     private final MemberRepository memberRepository;
+    private final GradeRepository gradeRepository;
 
     @InitBinder("groupsForm")
     public void groupsValidator(WebDataBinder webDataBinder) {
@@ -58,6 +63,8 @@ public class GroupsController {
 
     @GetMapping("new")
     public String form(Model model) {
+        List<Grade> findGrades = gradeRepository.findAllByStatus(Status.AVAILABLE);
+        model.addAttribute("grades", findGrades);
         model.addAttribute("groupsForm", new GroupsForm());
         return GROUPS_FORM;
     }
@@ -84,6 +91,9 @@ public class GroupsController {
     @GetMapping("{id}/edit")
     public String editForm(@PathVariable Long id, Model model) {
         Groups findGroups = groupsService.findGroups(id);
+        List<Grade> findGrades = gradeRepository.findAllByStatus(Status.AVAILABLE);
+
+        model.addAttribute("grades", findGrades);
         model.addAttribute("groupsForm", new GroupsForm(findGroups));
         return GROUPS_FORM;
     }
@@ -91,8 +101,11 @@ public class GroupsController {
     @PostMapping("new")
     public String createGroups(@Valid @ModelAttribute GroupsForm groupsForm,
                                BindingResult result,
+                               Model model,
                                RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
+            List<Grade> findGrades = gradeRepository.findAllByStatus(Status.AVAILABLE);
+            model.addAttribute("grades", findGrades);
             return GROUPS_FORM;
         }
         Long savedGroupsId = groupsService.saveGroups(groupsForm);
@@ -103,8 +116,11 @@ public class GroupsController {
     @PostMapping("{id}/edit")
     public String updateGroups(@Valid @ModelAttribute GroupsForm groupsForm,
                                BindingResult result,
+                               Model model,
                                RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
+            List<Grade> findGrades = gradeRepository.findAllByStatus(Status.AVAILABLE);
+            model.addAttribute("grades", findGrades);
             return GROUPS_FORM;
         }
         groupsService.updateGroups(groupsForm);
@@ -118,5 +134,4 @@ public class GroupsController {
         redirectAttributes.addFlashAttribute("message", Message.DELETED.getMessage());
         return "redirect:/groups";
     }
-
 }

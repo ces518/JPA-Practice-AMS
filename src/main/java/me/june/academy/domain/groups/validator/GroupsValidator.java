@@ -22,6 +22,9 @@ public class GroupsValidator implements Validator {
     public void validate(Object o, Errors errors) {
         GroupsForm form = (GroupsForm) o;
 
+        if (form.getGradeId() == null) {
+            errors.rejectValue("gradeId", "reject", "학년을 선택해 주세요.");
+        }
         if (!StringUtils.hasText(form.getName()) || form.getName().length() > 80) {
             errors.rejectValue("name", "reject", "이름은 빈 값이 오거나 80자를 넘을 수 없습니다.");
         }
