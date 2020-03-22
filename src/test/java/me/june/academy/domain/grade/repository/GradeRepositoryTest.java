@@ -1,6 +1,7 @@
 package me.june.academy.domain.grade.repository;
 
 import me.june.academy.domain.grade.Grade;
+import me.june.academy.model.Status;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,17 @@ class GradeRepositoryTest {
         gradeRepository.save(new Grade("gradeA"));
         gradeRepository.save(new Grade("gradeB"));
         gradeRepository.save(new Grade("gradeC"));
+    }
+
+    @Test
+    public void findAllByStatus() throws Exception {
+        // when
+        List<Grade> findGrades = gradeRepository.findAllByStatus(Status.AVAILABLE);
+
+        // then
+        assertThat(findGrades)
+                .extracting("status")
+                .contains(Status.AVAILABLE);
     }
 
     @Test
