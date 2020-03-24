@@ -5,12 +5,14 @@ import me.june.academy.common.Message;
 import me.june.academy.domain.subject.Subject;
 import me.june.academy.domain.subject.repository.SubjectSearch;
 import me.june.academy.domain.subject.service.SubjectService;
+import me.june.academy.domain.subject.validator.SubjectValidator;
 import me.june.academy.utils.PageWrapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -28,6 +30,11 @@ import javax.validation.Valid;
 public class SubjectController {
     private final String SUBJECT_FORM = "subjects/regist";
     private final SubjectService subjectService;
+
+    @InitBinder("subjectForm")
+    public void subjectValidator(WebDataBinder webDataBinder) {
+        webDataBinder.addValidators(new SubjectValidator());
+    }
 
     @GetMapping
     public String list(SubjectSearch subjectSearch,
