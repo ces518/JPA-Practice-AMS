@@ -48,14 +48,14 @@ public class SubjectController {
     }
 
     @GetMapping("{id}")
-    public String view(Long id, Model model) {
+    public String view(@PathVariable Long id, Model model) {
         Subject findSubject = subjectService.findSubject(id);
         model.addAttribute("subject", findSubject);
         return "subjects/view";
     }
 
     @GetMapping("{id}/edit")
-    public String editForm(Long id, Model model) {
+    public String editForm(@PathVariable Long id, Model model) {
         Subject findSubject = subjectService.findSubject(id);
         model.addAttribute("subjectForm", new SubjectForm(findSubject));
         return SUBJECT_FORM;
