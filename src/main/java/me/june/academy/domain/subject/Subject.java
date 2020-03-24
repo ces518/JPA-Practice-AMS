@@ -26,4 +26,29 @@ public class Subject extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private Status status;
+
+    public Subject(String name) {
+        this(name, Status.AVAILABLE);
+    }
+
+    public Subject(String name, Status status) {
+        this.name = name;
+        this.status = status;
+    }
+
+    private boolean isAvailable() {
+        return this.status == Status.AVAILABLE;
+    }
+
+    public boolean isDisabled() {
+        return !isAvailable();
+    }
+
+    public void update(Subject subject) {
+        this.name = subject.getName();
+    }
+
+    public void disable() {
+        this.status = Status.DISABLED;
+    }
 }
