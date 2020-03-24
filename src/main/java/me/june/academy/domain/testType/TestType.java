@@ -29,4 +29,29 @@ public class TestType extends BaseEntity {
     private String name;
 
     private Status status;
+
+    public TestType(String name) {
+        this(name, Status.AVAILABLE);
+    }
+
+    public TestType(String name, Status status) {
+        this.name = name;
+        this.status = status;
+    }
+
+    public void disabled() {
+        this.status = Status.DISABLED;
+    }
+
+    public void update(TestType testType) {
+        this.name = testType.getName();
+    }
+
+    public boolean isDisabled() {
+        return !isAvailable();
+    }
+
+    public boolean isAvailable() {
+        return this.status == Status.AVAILABLE;
+    }
 }

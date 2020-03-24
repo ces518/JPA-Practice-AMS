@@ -9,5 +9,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * Date: 2020-03-09
  * Time: 23:25
  **/
-public interface TestTypeRepository extends JpaRepository<TestType, Long> {
+public interface TestTypeRepository extends JpaRepository<TestType, Long>, TestTypeRepositoryCustom {
 }
