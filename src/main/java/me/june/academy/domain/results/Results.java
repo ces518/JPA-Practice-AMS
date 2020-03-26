@@ -1,6 +1,7 @@
 package me.june.academy.domain.results;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import me.june.academy.domain.member.Member;
@@ -38,4 +39,19 @@ public class Results extends BaseCreatedEntity {
     @ManyToOne
     @JoinColumn(name = "TEST_TYPE_ID")
     private TestType testType;
+
+    @Builder
+    public Results(int score, Member member, Subject subject, TestType testType) {
+        this.score = score;
+        this.member = member;
+        this.subject = subject;
+        this.testType = testType;
+    }
+
+    public void update(Results results) {
+        this.score = results.getScore();
+        this.member = results.getMember();
+        this.subject = results.getSubject();
+        this.testType = results.getTestType();
+    }
 }
