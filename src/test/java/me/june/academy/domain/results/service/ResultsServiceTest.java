@@ -81,7 +81,7 @@ class ResultsServiceTest {
         PageRequest pageRequest = PageRequest.of(0, 10);
 
         // when
-        Page<Results> page = resultsRepository.findAll(resultsSearch, pageRequest);
+        Page<Results> page = resultsService.findAll(resultsSearch, pageRequest);
         List<Results> results = page.getContent();
         long totalCount = page.getTotalElements();
 
@@ -109,7 +109,7 @@ class ResultsServiceTest {
         PageRequest pageRequest = PageRequest.of(0, 10);
 
         // when
-        Page<Results> page = resultsRepository.findAll(resultsSearch, pageRequest);
+        Page<Results> page = resultsService.findAll(resultsSearch, pageRequest);
         List<Results> results = page.getContent();
         long totalCount = page.getTotalElements();
 
@@ -139,7 +139,7 @@ class ResultsServiceTest {
         PageRequest pageRequest = PageRequest.of(0, 10);
 
         // when
-        Page<Results> page = resultsRepository.findAll(resultsSearch, pageRequest);
+        Page<Results> page = resultsService.findAll(resultsSearch, pageRequest);
         List<Results> results = page.getContent();
         long totalCount = page.getTotalElements();
 

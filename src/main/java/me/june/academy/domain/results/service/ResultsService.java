@@ -5,6 +5,7 @@ import me.june.academy.domain.member.Member;
 import me.june.academy.domain.member.service.MemberService;
 import me.june.academy.domain.results.Results;
 import me.june.academy.domain.results.repository.ResultsRepository;
+import me.june.academy.domain.results.repository.ResultsSearch;
 import me.june.academy.domain.results.web.ResultsForm;
 import me.june.academy.domain.subject.Subject;
 import me.june.academy.domain.subject.service.SubjectService;
@@ -31,8 +32,8 @@ public class ResultsService {
     private final TestTypeService testTypeService;
 
     // 목록 조회
-    public Page<Results> findAll(Pageable pageable) {
-        return resultsRepository.findAll(pageable);
+    public Page<Results> findAll(ResultsSearch resultsSearch, Pageable pageable) {
+        return resultsRepository.findAll(resultsSearch, pageable);
     }
 
     // 상세 조회

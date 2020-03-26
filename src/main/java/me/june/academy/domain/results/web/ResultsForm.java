@@ -47,6 +47,10 @@ public class ResultsForm {
         private Long id;
         private int score;
 
+        public UpdateRequest(Results results) {
+            this(results.getId(), results.getScore());
+        }
+
         public UpdateRequest(Long id, int score) {
             this.id = id;
             this.score = score;
