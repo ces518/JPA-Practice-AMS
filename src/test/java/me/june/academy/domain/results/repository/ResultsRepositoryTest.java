@@ -16,7 +16,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.ResultSet;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -59,7 +58,6 @@ class ResultsRepositoryTest {
         // then
         assertThat(totalCount).isEqualTo(3);
         assertThat(results.size()).isEqualTo(3);
-
     }
 
     @Test
@@ -111,5 +109,4 @@ class ResultsRepositoryTest {
         assertThat(totalCount).isEqualTo(3);
         assertThat(results.size()).isEqualTo(3);
     }
-
 }

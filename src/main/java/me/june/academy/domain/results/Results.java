@@ -50,8 +50,5 @@ public class Results extends BaseCreatedEntity {
 
     public void update(Results results) {
         this.score = results.getScore();
-        this.member = results.getMember();
-        this.subject = results.getSubject();
-        this.testType = results.getTestType();
     }
 }

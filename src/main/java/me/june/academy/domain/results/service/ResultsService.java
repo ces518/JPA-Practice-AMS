@@ -45,12 +45,12 @@ public class ResultsService {
 
     // 등록
     @Transactional
-    public Long saveResults(ResultsForm resultsForm) {
-        Member findMember = memberService.findMember(resultsForm.getMemberId());
-        Subject findSubject = subjectService.findSubject(resultsForm.getSubjectId());
-        TestType findTestType = testTypeService.findTestType(resultsForm.getTestTypeId());
+    public Long saveResults(ResultsForm.CreateRequest createRequest) {
+        Member findMember = memberService.findMember(createRequest.getMemberId());
+        Subject findSubject = subjectService.findSubject(createRequest.getSubjectId());
+        TestType findTestType = testTypeService.findTestType(createRequest.getTestTypeId());
 
-        Results results = resultsForm.toEntity(findMember, findSubject, findTestType);
+        Results results = createRequest.toEntity(findMember, findSubject, findTestType);
 
         Results savedResults = resultsRepository.save(results);
         return savedResults.getId();
@@ -58,14 +58,9 @@ public class ResultsService {
 
     // 수정
     @Transactional
-    public void updateResults(ResultsForm resultsForm) {
-        Results findResults = findResults(resultsForm.getId());
-        Member findMember = memberService.findMember(resultsForm.getMemberId());
-        Subject findSubject = subjectService.findSubject(resultsForm.getSubjectId());
-        TestType findTestType = testTypeService.findTestType(resultsForm.getTestTypeId());
-
-        Results results = resultsForm.toEntity(findMember, findSubject, findTestType);
-
+    public void updateResults(ResultsForm.UpdateRequest updateRequest) {
+        Results results = updateRequest.toEntity();
+        Results findResults = findResults(updateRequest.getId());
         findResults.update(results);
     }
 
