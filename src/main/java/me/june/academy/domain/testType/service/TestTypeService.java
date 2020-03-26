@@ -25,7 +25,7 @@ public class TestTypeService {
 
     // 목록 조회
     public Page<TestType> findAll(TestTypeSearch testTypeSearch, Pageable pageable) {
-        return testTypeRepository.findAll(pageable);
+        return testTypeRepository.findAll(testTypeSearch, pageable);
     }
 
     // 상세 조회
