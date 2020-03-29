@@ -1,6 +1,7 @@
 package me.june.academy.domain.member.repository;
 
 import me.june.academy.domain.member.Member;
+import me.june.academy.model.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -13,4 +14,5 @@ import java.util.List;
  **/
 public interface MemberRepository extends JpaRepository<Member, Long>, MemberRepositoryCustom {
 
+    List<Member> findAllByStatus(Status status);
 }

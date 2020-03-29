@@ -24,7 +24,7 @@ public class BaseCreatedEntity {
     private LocalDateTime createdAt;
 
     @CreatedBy
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CREATED_BY")
     private Member createdBy;
 }

@@ -1,6 +1,7 @@
 package me.june.academy.domain.testType.repository;
 
 import me.june.academy.domain.testType.TestType;
+import me.june.academy.model.Status;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,5 +61,30 @@ class TestTypeRepositoryTest {
         assertThat(testTypes)
                 .extracting("name")
                 .containsExactly("testTypeD");
+    }
+
+    @Test
+    public void findAllByStatus_available() throws Exception {
+        // given
+        Status status = Status.AVAILABLE;
+
+        // when
+        List<TestType> testTypes = testTypeRepository.findAllByStatus(status);
+
+        // then
+        assertThat(testTypes).extracting("status")
+                .contains(Status.AVAILABLE);
+    }
+
+    @Test
+    public void findAllByStatus_disabled() throws Exception {
+        // given
+        Status status = Status.DISABLED;
+
+        // when
+        List<TestType> testTypes = testTypeRepository.findAllByStatus(status);
+
+        // then
+        assertThat(testTypes.isEmpty()).isTrue();
     }
 }

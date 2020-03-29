@@ -2,6 +2,7 @@ package me.june.academy.domain.member.repository;
 
 import me.june.academy.domain.member.Member;
 import me.june.academy.model.Address;
+import me.june.academy.model.Status;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,6 +86,31 @@ class MemberRepositoryTest {
 
         // then
         assertThat(members.size()).isEqualTo(3);
+    }
+
+    @Test
+    public void findAllByStatus_available() throws Exception {
+        // given
+        Status status = Status.AVAILABLE;
+
+        // when
+        List<Member> members = memberRepository.findAllByStatus(status);
+
+        // then
+        assertThat(members).extracting("status")
+                .contains(Status.AVAILABLE);
+    }
+
+    @Test
+    public void findAllByStatus_disabled() throws Exception {
+        // given
+        Status status = Status.DISABLED;
+
+        // when
+        List<Member> members = memberRepository.findAllByStatus(status);
+
+        // then
+        assertThat(members.isEmpty()).isTrue();
     }
 
     private Member createMember(String name, String city, String street, String phone) {

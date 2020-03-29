@@ -1,6 +1,7 @@
 package me.june.academy.domain.subject.repository;
 
 import me.june.academy.domain.subject.Subject;
+import me.june.academy.model.Status;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,5 +59,30 @@ class SubjectRepositoryTest {
         assertThat(totalCount).isEqualTo(1);
         assertThat(subjects.size()).isEqualTo(1);
         assertThat(subjects.get(0).getName()).isEqualTo("subjectB");
+    }
+
+    @Test
+    public void findAllByStatus_available() throws Exception {
+        // given
+        Status status = Status.AVAILABLE;
+
+        // when
+        List<Subject> subjects = subjectRepository.findAllByStatus(status);
+
+        // then
+        assertThat(subjects).extracting("status")
+                .contains(Status.AVAILABLE);
+    }
+
+    @Test
+    public void findAllByStatus_disabled() throws Exception {
+        // given
+        Status status = Status.DISABLED;
+
+        // when
+        List<Subject> subjects = subjectRepository.findAllByStatus(status);
+
+        // then
+        assertThat(subjects.isEmpty()).isTrue();
     }
 }
