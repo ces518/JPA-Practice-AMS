@@ -17,6 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -108,5 +109,28 @@ class ResultsRepositoryTest {
         // then
         assertThat(totalCount).isEqualTo(3);
         assertThat(results.size()).isEqualTo(3);
+    }
+
+    @Test
+    public void findResultsById() throws Exception {
+        // given
+        Member savedMember = memberRepository.save(new Member("memberA",
+                new Address("경기도", "수원시", "1234"),
+                "010-1234-1234"));
+        Subject subjectA = subjectRepository.save(new Subject("subjectA"));
+        TestType savedTestType = testTypeRepository.save(new TestType("testTypeA"));
+
+        Results savedResults = resultsRepository.save(new Results(100, savedMember, subjectA, savedTestType));
+
+        Long id = savedResults.getId();
+
+        // when
+        Optional<Results> optionalResults = resultsRepository.findResultsById(id);
+        Results findResults = optionalResults.get();
+
+        // then
+        assertThat(findResults.getTestType().getName()).isEqualTo("testTypeA");
+        assertThat(findResults.getSubject().getName()).isEqualTo("subjectA");
+        assertThat(findResults.getMember().getName()).isEqualTo("memberA");
     }
 }

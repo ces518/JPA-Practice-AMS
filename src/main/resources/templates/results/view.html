@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+<style>
+    .fieldError {
+        border-color: #bd2130;
+    }
+</style>
+<body>
+<div class="container">
+    <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+    <table class="table">
+        <tr>
+            <th>시험분류</th>
+            <td th:text="${results.testType.name}"></td>
+        </tr>
+        <tr>
+            <th>과목</th>
+            <td th:text="${results.subject.name}"></td>
+        <tr>
+            <th>이름</th>
+            <td th:text="${results.member.name}"></td>
+        </tr>
+        <tr>
+            <th>점수</th>
+            <td th:text="${results.score}"></td>
+        </tr>
+    </table>
+    <div style="text-align: right;">
+        <a class="btn btn-sm btn-dark" href="#edit" th:href="@{/results/{id}/edit (id=${results.id})}">수정</a>
+        <a class="btn btn-sm btn-warning" href="#edit" th:attr="onclick=|deleteResults(${results.id})|">삭제</a>
+        <a class="btn btn-sm btn-info" th:href="@{/results}">목록</a>
+    </div>
+    <br/>
+    <div th:replace="fragments/footer :: footer" />
+</div> <!-- /container -->
+<script>
+    function deleteResults(id) {
+        const form = document.createElement('form');
+        const method = document.createElement('input');
+
+        method.type = 'hidden';
+        method.name = '_method';
+        method.value = 'DELETE';
+        form.action = `/results/${id}`;
+        form.method = 'post';
+
+        form.appendChild(method);
+        document.body.appendChild(form);
+        form.submit();
+    }
+</script>
+</body>
+</html>

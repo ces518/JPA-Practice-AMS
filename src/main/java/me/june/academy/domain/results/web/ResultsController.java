@@ -2,15 +2,15 @@ package me.june.academy.domain.results.web;
 
 import lombok.RequiredArgsConstructor;
 import me.june.academy.common.Message;
-import me.june.academy.domain.member.Member;
 import me.june.academy.domain.member.repository.MemberRepository;
 import me.june.academy.domain.results.Results;
 import me.june.academy.domain.results.repository.ResultsSearch;
+import me.june.academy.domain.results.repository.query.ResultsQueryDto;
+import me.june.academy.domain.results.repository.query.ResultsQueryRepository;
 import me.june.academy.domain.results.service.ResultsService;
 import me.june.academy.domain.results.validator.ResultsCreateValidator;
-import me.june.academy.domain.subject.Subject;
+import me.june.academy.domain.results.validator.ResultsUpdateValidator;
 import me.june.academy.domain.subject.repository.SubjectRepository;
-import me.june.academy.domain.testType.TestType;
 import me.june.academy.domain.testType.repository.TestTypeRepository;
 import me.june.academy.model.Status;
 import me.june.academy.utils.PageWrapper;
@@ -35,6 +35,7 @@ import javax.validation.Valid;
 @RequestMapping("/results")
 @RequiredArgsConstructor
 public class ResultsController {
+    private final ResultsQueryRepository resultsQueryRepository;
     private final ResultsService resultsService;
     private final MemberRepository memberRepository;
     private final SubjectRepository subjectRepository;
@@ -45,12 +46,17 @@ public class ResultsController {
         webDataBinder.addValidators(new ResultsCreateValidator());
     }
 
+    @InitBinder("updateForm")
+    public void resultsUpdateValidator(WebDataBinder webDataBinder) {
+        webDataBinder.addValidators(new ResultsUpdateValidator());
+    }
+
     @GetMapping
     public String list(ResultsSearch resultsSearch,
                        Pageable pageable,
                        Model model) {
-        Page<Results> resultsPage = resultsService.findAll(resultsSearch, pageable);
-        PageWrapper<Results> page = new PageWrapper<>(resultsPage, "/results");
+        Page<ResultsQueryDto> resultsPage = resultsQueryRepository.findAll(resultsSearch, pageable);
+        PageWrapper<ResultsQueryDto> page = new PageWrapper<>(resultsPage, "/results");
 
         model.addAttribute("resultsPage", resultsPage);
         model.addAttribute("page", page);
@@ -101,7 +107,8 @@ public class ResultsController {
                                 RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             initValues(model);
-            return "results/updateResultForm";
+            model.addAttribute("results", resultsService.findResults(updateRequest.getId()));
+            return "results/updateResultsForm";
         }
         resultsService.updateResults(updateRequest);
         redirectAttributes.addFlashAttribute("message", Message.UPDATED.getMessage());

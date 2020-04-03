@@ -39,7 +39,7 @@ public class ResultsService {
     // 상세 조회
     public Results findResults(Long id) {
         Assert.notNull(id, "Results id should be not null");
-        Results results = resultsRepository.findById(id)
+        Results results = resultsRepository.findResultsById(id)
                 .orElseThrow(() -> new NotFoundResultsException("존재하지 않는 성적입니다."));
         return results;
     }
