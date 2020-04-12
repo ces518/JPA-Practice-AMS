@@ -31,4 +31,9 @@ public class GroupTeacher extends BaseCreatedEntity {
     @ManyToOne
     @JoinColumn(name = "TEACHER_ID")
     private Teacher teacher;
+
+    public GroupTeacher(Groups group, Teacher teacher) {
+        this.group = group;
+        this.teacher = teacher;
+    }
 }
